@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  OEM
+  VENDOR
+}
+
+enum VendorStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum JobStatus {
+  PENDING_REVIEW  // Uploaded by OEM
+  OPEN            // Approved by Admin, ready for assignment
+  ASSIGNED        // Assigned to Vendor
+  IN_PROGRESS     // Vendor started work
+  QC              // Quality Check
+  COMPLETED       // Job done
+  PAID            // Offline payment confirmed
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // Hashed
+  name          String?
+  companyName   String?
+  role          UserRole  @default(OEM)
+  createdAt     DateTime  @default(now())
+  
+  vendorProfile VendorProfile?
+  jobsCreated   Job[]     @relation("JobCreator")
+  jobsAssigned  Job[]     @relation("JobVendor")
+
+  @@map("users")
+}
+
+model VendorProfile {
+  id          String       @id @default(cuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  status      VendorStatus @default(PENDING)
+  machines    Json         // JSON: { "lathe": 2, "cnc": 1 }
+  address     String
+  city        String
+  verifiedAt  DateTime?
+
+  @@map("vendor_profiles")
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  title       String    // e.g., "CNC Machining - Steel Part X"
+  description String?
+  
+  // Requirements
+  material    String
+  quantity    Int
+  tolerance   String?
+  deadline    DateTime
+  location    String    // City/Pincode
+  
+  // Status
+  status      JobStatus @default(PENDING_REVIEW)
+  
+  // Relations
+  oemId       String
+  oem         User      @relation("JobCreator", fields: [oemId], references: [id])
+  
+  vendorId    String?
+  vendor      User?     @relation("JobVendor", fields: [vendorId], references: [id])
+  
+  files       JobFile[]
+  logs        JobStatusLog[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([oemId])
+  @@index([vendorId])
+  @@index([status])
+  @@map("jobs")
+}
+
+model JobFile {
+  id        String   @id @default(cuid())
+  url       String
+  name      String
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@map("job_files")
+}
+
+model JobStatusLog {
+  id        String    @id @default(cuid())
+  jobId     String
+  job       Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  status    JobStatus
+  note      String?
+  changedBy String    // userId (admin/vendor)
+  createdAt DateTime  @default(now())
+
+  @@index([jobId])
+  @@map("job_status_logs")
+}
