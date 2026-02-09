@@ -16,8 +16,8 @@ const { auth } = NextAuth(authConfig)
 export default auth((req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
-  const userRole = req.auth?.user?.role
-
+  const user = req.auth?.user
+  
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
@@ -27,20 +27,23 @@ export default auth((req) => {
   const isVendorRoute = nextUrl.pathname.startsWith(vendorRoutes)
 
   if (isApiAuthRoute) {
-    return null
+    return null 
   }
+  console.log("ROLE:", user?.role);
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      if (userRole === "ADMIN") return Response.redirect(new URL("/admin/dashboard", nextUrl))
-      if (userRole === "OEM") return Response.redirect(new URL("/oem/dashboard", nextUrl))
-      if (userRole === "VENDOR") return Response.redirect(new URL("/vendor/dashboard", nextUrl))
+      if (user?.role === "ADMIN") return Response.redirect(new URL("/admin/dashboard", nextUrl))
+      if (user?.role === "OEM") return Response.redirect(new URL("/oem/dashboard", nextUrl))
+      if (user?.role === "VENDOR") {
+          return Response.redirect(new URL("/vendor", nextUrl))
+        }
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
     }
     return null
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
+  if (!isLoggedIn && !isPublicRoute) { 
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
@@ -52,14 +55,14 @@ export default auth((req) => {
   }
 
   // Role Base Protection
-  if (isLoggedIn) {
-    if (isAdminRoute && userRole !== UserRole.ADMIN) {
-        return Response.redirect(new URL("/dashboard", nextUrl)) // Or unauthorized page
-    }
-    if (isOemRoute && userRole !== UserRole.OEM) {
+  if (isLoggedIn && user) {
+    if (isAdminRoute && user.role !== UserRole.ADMIN) {
         return Response.redirect(new URL("/dashboard", nextUrl))
     }
-    if (isVendorRoute && userRole !== UserRole.VENDOR) {
+    if (isOemRoute && user.role !== UserRole.OEM) {
+        return Response.redirect(new URL("/dashboard", nextUrl))
+    }
+    if (isVendorRoute && user.role !== UserRole.VENDOR) {
         return Response.redirect(new URL("/dashboard", nextUrl))
     }
   }

@@ -59,10 +59,11 @@ model VendorProfile {
   address     String
   city        String
   verifiedAt  DateTime?
+  isOnboarded Boolean      @default(false)
 
   @@map("vendor_profiles")
 }
-
+  
 model Job {
   id          String    @id @default(cuid())
   title       String    // e.g., "CNC Machining - Steel Part X"

@@ -11,11 +11,18 @@ export const {
   handlers: { GET, POST },
   auth,
   signIn,
-  signOut,
+  signOut, 
 } = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   callbacks: {
+
+    // session callback (runs when session is read)
+    // What this does:
+    // Copies id + role from JWT → session.user
+    // Makes them available everywhere
+
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -24,21 +31,33 @@ export const {
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
       }
+
+      if (session.user) {
+        session.user.isOnboarded = token.isOnboarded as boolean;
+      }
       
       return session;
     },
+
     async jwt({ token }) {
       if (!token.sub) return token;
 
       const existingUser = await prisma.user.findUnique({
-        where: { id: token.sub }
+        where: { id: token.sub },
+        include: { vendorProfile: true }
       });
 
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.isOnboarded = false;
+
+      if (existingUser.role === UserRole.VENDOR) {
+          token.isOnboarded = existingUser.vendorProfile?.isOnboarded ?? false;
+      }
+
       return token;
-    }
+    } 
   },
   ...authConfig,
   providers: [
@@ -58,6 +77,9 @@ export const {
           const passwordsMatch = await compare(password, user.password);
 
           if (passwordsMatch) return user;
+
+          //  const passwordsMatch = await bcrypt.compare(password, user.password);
+        // if (!passwordsMatch) return null;
         }
 
         return null;
@@ -65,3 +87,14 @@ export const {
     })
   ],
 })
+
+
+// Flow:
+
+// Validate input with Zod (LoginSchema)
+// Look up user by email
+// Compare hashed password (bcryptjs)
+// Return user if valid
+// Returning user = successful login
+// Returning null = login failed
+
