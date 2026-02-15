@@ -29,21 +29,20 @@ export default auth((req) => {
   if (isApiAuthRoute) {
     return null 
   }
-  console.log("ROLE:", user?.role);
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       if (user?.role === "ADMIN") return Response.redirect(new URL("/admin/dashboard", nextUrl))
       if (user?.role === "OEM") return Response.redirect(new URL("/oem/dashboard", nextUrl))
       if (user?.role === "VENDOR") {
-          return Response.redirect(new URL("/vendor", nextUrl))
-        }
+        return Response.redirect(new URL("/vendor/dashboard", nextUrl))
+      }
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
     }
     return null
   }
 
-  if (!isLoggedIn && !isPublicRoute) { 
+  if (!isLoggedIn && !isPublicRoute) {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
@@ -53,21 +52,6 @@ export default auth((req) => {
 
     return Response.redirect(new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl));
   }
-
-  // Role Base Protection
-  if (isLoggedIn && user) {
-    if (isAdminRoute && user.role !== UserRole.ADMIN) {
-        return Response.redirect(new URL("/dashboard", nextUrl))
-    }
-    if (isOemRoute && user.role !== UserRole.OEM) {
-        return Response.redirect(new URL("/dashboard", nextUrl))
-    }
-    if (isVendorRoute && user.role !== UserRole.VENDOR) {
-        return Response.redirect(new URL("/dashboard", nextUrl))
-    }
-  }
-
-  return null
 })
 
 export const config = {

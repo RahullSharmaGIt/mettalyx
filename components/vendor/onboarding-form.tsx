@@ -54,7 +54,7 @@ export const VendorOnboardingForm = () => {
             setSuccess(data.success);
             // Redirect to vendor dashboard after success
             setTimeout(() => {
-                router.push("/vendor");
+                router.push("/vendor/dashboard");
             }, 1000);
           }
         })
@@ -66,7 +66,7 @@ export const VendorOnboardingForm = () => {
     <CardWrapper
       headerLabel="Complete your Vendor Profile"
       backButtonLabel="Back to Dashboard"
-      backButtonHref="/vendor"
+      backButtonHref="/vendor/dashboard"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

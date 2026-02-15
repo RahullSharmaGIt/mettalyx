@@ -4,7 +4,6 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserRole } from "@prisma/client";
 
 import { RegisterSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
@@ -32,7 +31,7 @@ export const RegisterForm = () => {
             email: "",
             password: "",
             name: "",
-            role: UserRole.OEM,
+            role: "OEM",
             companyName: ""
         },
     });
@@ -77,7 +76,7 @@ export const RegisterForm = () => {
                                         >
                                             <FormItem className="flex items-center space-x-3 space-y-0">
                                                 <FormControl>
-                                                    <RadioGroupItem value={UserRole.OEM} />
+                                                    <RadioGroupItem value="OEM" />
                                                 </FormControl>
                                                 <FormLabel className="font-normal">
                                                     Buyer (OEM)
@@ -85,7 +84,7 @@ export const RegisterForm = () => {
                                             </FormItem>
                                             <FormItem className="flex items-center space-x-3 space-y-0">
                                                 <FormControl>
-                                                    <RadioGroupItem value={UserRole.VENDOR} />
+                                                    <RadioGroupItem value="VENDOR" />
                                                 </FormControl>
                                                 <FormLabel className="font-normal">
                                                     Manufacturer (Vendor)

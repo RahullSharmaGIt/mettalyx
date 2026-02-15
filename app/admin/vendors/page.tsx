@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { verifyVendor } from "@/actions/verify-vendor";
+import { rejectVendor, approveVendor } from "./actions";
 
 const AdminVendorsPage = async () => {
   const session = await auth();
@@ -62,16 +62,10 @@ const AdminVendorsPage = async () => {
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-between">
-                         <form action={async () => {
-                            "use server";
-                            await verifyVendor(vendor.id, "REJECT");
-                         }}>
+                         <form action={rejectVendor.bind(null, vendor.id)}>
                             <Button variant="destructive" size="sm">Reject</Button>
                          </form>
-                         <form action={async () => {
-                            "use server";
-                            await verifyVendor(vendor.id, "VERIFY");
-                         }}>
+                         <form action={approveVendor.bind(null, vendor.id)}>
                             <Button variant="default" size="sm" className="bg-emerald-600 hover:bg-emerald-700">
                                 Verify Vendor
                             </Button>
