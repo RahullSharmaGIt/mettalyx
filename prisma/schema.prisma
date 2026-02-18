@@ -58,6 +58,8 @@ model VendorProfile {
   machines    Json         // JSON: { "lathe": 2, "cnc": 1 }
   address     String
   city        String
+  lat         Float?
+  lng         Float?
   verifiedAt  DateTime?
   isOnboarded Boolean      @default(false)
 
@@ -75,6 +77,8 @@ model Job {
   tolerance   String?
   deadline    DateTime
   location    String    // City/Pincode
+  lat         Float?
+  lng         Float?
   
   // Status
   status      JobStatus @default(PENDING_REVIEW)

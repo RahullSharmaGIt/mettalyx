@@ -2,18 +2,10 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Calendar, MapPin, Package, Info } from "lucide-react";
-import { acceptJob } from "./actions";
+import { Info } from "lucide-react";
+import { JobList } from "@/components/vendor/job-list";
 
 const VendorJobsPage = async () => {
   const session = await auth();
@@ -39,14 +31,15 @@ const VendorJobsPage = async () => {
           <Info className="h-4 w-4" />
           <AlertTitle>Verification Required</AlertTitle>
           <AlertDescription>
-            Your profile is currently under review. You will be able to view and bid on jobs once you are verified by our admin team.
+            Your profile is currently under review. You will be able to view and
+            bid on jobs once you are verified by our admin team.
           </AlertDescription>
         </Alert>
       </div>
     );
   }
 
-  // Fetch OPEN jobs
+  // Fetch OPEN jobs with lat/lng for distance calculation
   const openJobs = await prisma.job.findMany({
     where: { status: "OPEN" },
     include: {
@@ -78,79 +71,11 @@ const VendorJobsPage = async () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
-          {openJobs.map((job) => (
-            <Card key={job.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle>{job.title}</CardTitle>
-                    <CardDescription>
-                      Posted by {job.oem.companyName || job.oem.name}
-                    </CardDescription>
-                  </div>
-                  <Badge className="bg-emerald-600">OPEN</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {job.description && (
-                  <p className="text-sm text-muted-foreground">
-                    {job.description}
-                  </p>
-                )}
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Package className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">Material</p>
-                      <p className="text-muted-foreground">{job.material}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Package className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">Quantity</p>
-                      <p className="text-muted-foreground">{job.quantity}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">Deadline</p>
-                      <p className="text-muted-foreground">
-                        {new Date(job.deadline).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">Location</p>
-                      <p className="text-muted-foreground">{job.location}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {job.tolerance && (
-                  <div className="text-sm">
-                    <span className="font-medium">Tolerance: </span>
-                    <span className="text-muted-foreground">{job.tolerance}</span>
-                  </div>
-                )}
-
-                <form action={acceptJob.bind(null, job.id)} className="pt-2">
-                  <Button type="submit" className="w-full">
-                    Accept Job
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <JobList
+          jobs={openJobs}
+          vendorLat={vendorProfile.lat}
+          vendorLng={vendorProfile.lng}
+        />
       )}
     </div>
   );

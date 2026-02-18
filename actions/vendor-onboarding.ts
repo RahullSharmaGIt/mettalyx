@@ -19,7 +19,7 @@ export const vendorOnboarding = async (values: z.infer<typeof VendorOnboardingSc
     return { error: "Invalid fields!" };
   }
 
-  const { workshopName, machines, address, city } = validatedFields.data;
+  const { workshopName, machines, address, city, lat, lng } = validatedFields.data;
 
   // Update User (companyName) and VendorProfile
 if (!session?.user?.id) {
@@ -40,6 +40,8 @@ await prisma.$transaction([
       machines: { list: machines },
       address,
       city,
+      lat,
+      lng,
       isOnboarded: true,
       status: "PENDING",
     },
@@ -47,6 +49,8 @@ await prisma.$transaction([
       machines: { list: machines },
       address,
       city,
+      lat,
+      lng,
       isOnboarded: true,
     },
   }),

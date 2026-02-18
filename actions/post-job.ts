@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { UserRole } from "@prisma/client";
 import { JobPostingSchema } from "@/schemas";
 import { redirect } from "next/navigation";
+import { getCoordinates } from "@/lib/geocoding";
 
 export const postJob = async (values: z.infer<typeof JobPostingSchema>) => {
   const session = await auth();
@@ -22,6 +23,9 @@ export const postJob = async (values: z.infer<typeof JobPostingSchema>) => {
 
   const { title, description, material, quantity, tolerance, deadline, location } = validatedFields.data;
 
+  // Silently geocode the location — never blocks job creation
+  const coords = await getCoordinates(location);
+
   await prisma.job.create({
     data: {
       title,
@@ -31,6 +35,8 @@ export const postJob = async (values: z.infer<typeof JobPostingSchema>) => {
       tolerance,
       deadline: new Date(deadline),
       location,
+      lat: coords?.lat ?? null,
+      lng: coords?.lng ?? null,
       oem: {
         connect: {
           id: session.user.id,

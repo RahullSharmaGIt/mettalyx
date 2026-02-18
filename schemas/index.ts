@@ -30,6 +30,8 @@ export const VendorOnboardingSchema = z.object({
   machines: z.string().min(1, { message: "List your machines" }), // Simple text for MVP
   address: z.string().min(1, { message: "Address is required" }),
   city: z.string().min(1, { message: "City is required" }),
+  lat: z.number().optional().nullable(),
+  lng: z.number().optional().nullable(),
 });
 
 export const JobPostingSchema = z.object({

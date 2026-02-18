@@ -1,32 +1,37 @@
-import { PrismaClient } from '@prisma/client'
-import { hash } from 'bcryptjs'
+import { PrismaClient, UserRole } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
-  const password = await hash('admin123', 12)
+  console.log("🌱 Seeding database...");
 
+  // Create admin user
+  const adminPassword = await bcrypt.hash("admin123", 10);
+  
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@metallyx.com' },
+    where: { email: "admin@metallyx.com" },
     update: {},
     create: {
-      email: 'admin@metallyx.com',
-      name: 'Admin User',
-      password,
-      role: 'ADMIN',
-      companyName: 'Metallyx HQ',
+      email: "admin@metallyx.com",
+      password: adminPassword,
+      name: "Admin User",
+      role: UserRole.ADMIN,
     },
-  })
+  });
 
-  console.log({ admin })
+  console.log("✅ Admin user created:");
+  console.log("   Email: admin@metallyx.com");
+  console.log("   Password: admin123");
+  console.log("");
+  console.log("🎉 Seeding completed!");
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
+  .catch((e) => {
+    console.error("❌ Error seeding database:", e);
+    process.exit(1);
   })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
