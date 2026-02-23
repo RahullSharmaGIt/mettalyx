@@ -56,7 +56,7 @@ export const LoginForm = () => {
     <CardWrapper
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
-      backButtonHref="/auth/register"
+      backButtonHref="/auth/register" 
       showSocial
     >
       <Form {...form}>
@@ -70,9 +70,10 @@ export const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="font-bold uppercase tracking-wider text-xs text-slate-700">Email</FormLabel>
                   <FormControl>
                     <Input
+                      className="h-12 bg-slate-50 font-mono"
                       {...field}
                       disabled={isPending}
                       placeholder="john.doe@example.com"
@@ -88,9 +89,10 @@ export const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="font-bold uppercase tracking-wider text-xs text-slate-700">Password</FormLabel>
                   <FormControl>
                     <Input
+                      className="h-12 bg-slate-50 font-mono border-2 border-slate-900 shadow-sm"
                       {...field}
                       disabled={isPending}
                       placeholder="******"
@@ -103,19 +105,19 @@ export const LoginForm = () => {
             />
           </div>
           {error && (
-            <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive">
+            <div className="bg-red-100 border-2 border-slate-900 shadow-neo p-4 mt-2 rounded-none flex items-center gap-x-2 text-sm text-red-700 font-bold uppercase">
                 <p>{error}</p>
             </div>
           )}
           {success && (
-             <div className="bg-emerald-500/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-emerald-500">
+             <div className="bg-emerald-100 border-2 border-slate-900 shadow-neo p-4 mt-2 rounded-none flex items-center gap-x-2 text-sm text-emerald-700 font-bold uppercase">
                 <p>{success}</p>
             </div>
           )}
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full"
+            className="w-full h-14 mt-6 text-lg uppercase tracking-wider"
           >
             Login
           </Button>

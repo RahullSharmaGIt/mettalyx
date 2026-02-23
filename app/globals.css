@@ -44,6 +44,13 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* METALLYX: Neobrutalist & Industrial Design Tokens */
+  /* --shadow-neo: 4px 4px 0px #0F172A;
+  --color-industrial-bg: #F8FAFC;
+  --color-industrial-text: #0F172A;
+  --color-industrial-orange: #F97316;
+  --color-industrial-border: #0F172A; */
 }
 
 :root {

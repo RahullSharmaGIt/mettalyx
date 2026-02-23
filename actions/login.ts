@@ -76,7 +76,7 @@ import prisma from "@/lib/prisma"; // Import prisma to check role before login
 
 export const login = async (
   values: z.infer<typeof LoginSchema>
-) => {
+): Promise<{ error?: string; success?: string }> => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -112,8 +112,8 @@ export const login = async (
       password,
       redirectTo: redirectUrl, // Force them to their specific dashboard
     });
-    
     // Note: Code unreachable here because signIn throws a Redirect error on success
+    return { success: "Redirecting..." };
   } catch (error) {
     // 4. Handle NextAuth Errors
     if (error instanceof AuthError) {
