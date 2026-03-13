@@ -6,6 +6,7 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 import { MachineRoom } from "@/components/landing/machine-room";
 import { TrustPillars } from "@/components/landing/trust-pillars";
 import { FoundersPledge } from "@/components/landing/founders-pledge";
+import ManufacturingServicesSection from "@/components/landing/ManufacturingServicesSection";
 import Link from "next/link";
 
 export default async function Home() {
@@ -24,7 +25,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-industrial-bg font-sans selection:bg-industrial-orange selection:text-industrial-text">
-      
+
       {/* Top Navbar */}
       <nav className="fixed top-0 w-full z-50 bg-industrial-bg border-b-2 border-industrial-border px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -34,7 +35,7 @@ export default async function Home() {
           </div>
           <span className="text-xl font-black uppercase tracking-tighter text-industrial-text">METALLYX</span>
         </div>
-        
+
         <div className="flex gap-4">
           <Link href="/auth/login" className="hidden sm:inline-block px-5 py-2 font-bold text-industrial-text uppercase text-sm border-2 border-transparent hover:border-industrial-border transition-colors">
             Sign In
@@ -48,8 +49,13 @@ export default async function Home() {
       {/* Hero Content */}
       <HeroSection />
 
+
+
       {/* Live Stats Ribbon */}
       <NetworkStats />
+
+      {/* Manufacturing Services Section */}
+      <ManufacturingServicesSection />
 
       {/* Blueprint to Part Steps */}
       <HowItWorks />
@@ -68,7 +74,7 @@ export default async function Home() {
         <div className="font-mono text-sm uppercase text-slate-500 mb-4">
           Metallyx Logistics & Manufacturing
         </div>
-        <p className="font-bold">© {new Date().getFullYear()} METALLYX INC. ALL RIGHTS RESERVED.</p>
+        <p className="font-bold" suppressHydrationWarning>© {new Date().getFullYear()} METALLYX INC. ALL RIGHTS RESERVED.</p>
       </footer>
     </main>
   );

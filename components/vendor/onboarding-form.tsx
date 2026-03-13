@@ -23,6 +23,7 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { vendorOnboarding } from "@/actions/vendor-onboarding";
 
 import { MapPin, CheckCircle, Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 export const VendorOnboardingForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -83,7 +84,7 @@ export const VendorOnboardingForm = () => {
             setSuccess(data.success);
             // Redirect to vendor dashboard after success
             setTimeout(() => {
-                router.push("/vendor/dashboard");
+              router.push("/vendor/dashboard");
             }, 1000);
           }
         })
@@ -140,10 +141,10 @@ export const VendorOnboardingForm = () => {
                 )}
               />
               <div className="flex flex-col gap-2">
-                <FormLabel className="invisible">Location</FormLabel>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Label className="font-bold uppercase tracking-wider text-xs text-slate-700">Location</Label>
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={getLocation}
                   disabled={isPending || isLocating}
                   className="w-full"

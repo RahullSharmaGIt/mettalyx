@@ -1,8 +1,7 @@
 "use client"
 
 import * as React from "react"
-import type { Label as LabelPrimitive } from "radix-ui"
-import { Slot } from "radix-ui"
+import { Label as LabelPrimitive, Slot } from "radix-ui"
 import {
   Controller,
   FormProvider,
@@ -50,7 +49,18 @@ const useFormField = () => {
   const fieldState = getFieldState(fieldContext.name, formState)
 
   if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>")
+    return {
+      id: itemContext.id || "",
+      name: "",
+      formItemId: `${itemContext.id || ""}-form-item`,
+      formDescriptionId: `${itemContext.id || ""}-form-item-description`,
+      formMessageId: `${itemContext.id || ""}-form-item-message`,
+      error: undefined,
+      invalid: false,
+      isDirty: false,
+      isTouched: false,
+      isValidating: false,
+    }
   }
 
   const { id } = itemContext
@@ -94,10 +104,14 @@ function FormLabel({
   const { error, formItemId } = useFormField()
 
   return (
-    <Label
+    <LabelPrimitive.Root
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={cn(
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        "data-[error=true]:text-destructive",
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     />

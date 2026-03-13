@@ -46,11 +46,11 @@
   --radius-4xl: calc(var(--radius) + 16px);
 
   /* METALLYX: Neobrutalist & Industrial Design Tokens */
-  /* --shadow-neo: 4px 4px 0px #0F172A;
+  --shadow-neo: 4px 4px 0px #0F172A;
   --color-industrial-bg: #F8FAFC;
   --color-industrial-text: #0F172A;
   --color-industrial-orange: #F97316;
-  --color-industrial-border: #0F172A; */
+  --color-industrial-border: #0F172A;
 }
 
 :root {
@@ -126,6 +126,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
