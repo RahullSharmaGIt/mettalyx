@@ -3,12 +3,12 @@ import prisma from "@/lib/prisma";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { 
+import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
-    CardTitle 
+    CardTitle
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -26,18 +26,18 @@ const VendorDashboardPage = async () => {
     });
 
     if (
-    !vendorProfile ||
-    !vendorProfile.address ||
-    !vendorProfile.city ||
-    !vendorProfile.machines
+        !vendorProfile ||
+        !vendorProfile.address ||
+        !vendorProfile.city ||
+        !vendorProfile.machines
     ) {
-    redirect("/vendor/onboarding");
+        redirect("/vendor/onboarding");
     }
 
-    return ( 
+    return (
         <div className="p-8 space-y-6">
             <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
-            
+
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -104,7 +104,7 @@ const VendorDashboardPage = async () => {
                     <Info className="h-4 w-4" />
                     <AlertTitle>Pending Verification</AlertTitle>
                     <AlertDescription>
-                        Your profile is currently under review by our admin team. 
+                        Your profile is currently under review by our admin team.
                         You will be notified once you are verified and can start accepting jobs.
                     </AlertDescription>
                 </Alert>
@@ -120,7 +120,7 @@ const VendorDashboardPage = async () => {
                 </Alert>
             )}
         </div>
-     );
+    );
 }
- 
+
 export default VendorDashboardPage;
