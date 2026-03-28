@@ -60,8 +60,11 @@ export const JobPostingSchema = z.object({
   title: z.string().min(1, { message: "Job title is required" }),
   description: z.string().optional(),
   material: z.string().min(1, { message: "Material is required" }),
+  materialGrade: z.string().optional(),
   quantity: z.string().min(1, { message: "Quantity is required" }),
   tolerance: z.string().optional(),
+  surfaceFinish: z.string().optional(),
   deadline: z.string().min(1, { message: "Deadline is required" }),
   location: z.string().min(1, { message: "Location is required" }),
 });
+

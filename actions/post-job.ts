@@ -8,7 +8,10 @@ import { JobPostingSchema } from "@/schemas";
 import { redirect } from "next/navigation";
 import { getCoordinates } from "@/lib/geocoding";
 
-export const postJob = async (values: z.infer<typeof JobPostingSchema>) => {
+export const postJob = async (
+  values: z.infer<typeof JobPostingSchema>,
+  fileIds: string[] = []
+) => {
   const session = await auth();
 
   if (!session || session.user.role !== UserRole.OEM) {
@@ -21,30 +24,52 @@ export const postJob = async (values: z.infer<typeof JobPostingSchema>) => {
     return { error: "Invalid fields!" };
   }
 
-  const { title, description, material, quantity, tolerance, deadline, location } = validatedFields.data;
+  const {
+    title,
+    description,
+    material,
+    materialGrade,
+    quantity,
+    tolerance,
+    surfaceFinish,
+    deadline,
+    location,
+  } = validatedFields.data;
 
-  // Silently geocode the location — never blocks job creation
+  // Silently geocode — never blocks job creation
   const coords = await getCoordinates(location);
 
-  await prisma.job.create({
+  const job = await prisma.job.create({
     data: {
       title,
       description,
       material,
+      materialGrade,
       quantity: parseInt(quantity, 10),
       tolerance,
+      surfaceFinish,
       deadline: new Date(deadline),
       location,
       lat: coords?.lat ?? null,
       lng: coords?.lng ?? null,
-      oem: {
-        connect: {
-          id: session.user.id,
-        },
-      },
+      oem: { connect: { id: session.user.id } },
       status: "PENDING_REVIEW",
     },
   });
+
+  // Link any pre-uploaded files to the new job.
+  // Files were uploaded to S3 during form fill and are confirmed rows in DB.
+  // We only link files that were actually uploaded by this OEM (security check).
+  if (fileIds.length > 0) {
+    await prisma.jobFile.updateMany({
+      where: {
+        id: { in: fileIds },
+        uploadedBy: session.user.id as string, // Prevent cross-OEM linkage
+        jobId: { equals: null },               // Only orphan (unlinked) files
+      },
+      data: { jobId: job.id },
+    });
+  }
 
   redirect("/oem/dashboard");
 };

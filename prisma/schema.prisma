@@ -45,6 +45,8 @@ model User {
   vendorProfile VendorProfile?
   jobsCreated   Job[]     @relation("JobCreator")
   jobsAssigned  Job[]     @relation("JobVendor")
+  bids          Bid[]
+  fileAccessLogs FileAccessLog[]
 
   @@map("users")
 }
@@ -115,7 +117,7 @@ model VendorDocument {
   vendorProfile  VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   name           String
   url            String
-  type           String        // e.g., "CERTIFICATE", "SAMPLE_WORK", "COMPLIANCE"
+  type           String        // e.g., "ISO_CERTIFICATE", "SAMPLE_WORK", "COMPLIANCE_PROOF"
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -129,10 +131,12 @@ model Job {
   description String?
   
   // Requirements
-  material    String
-  quantity    Int
-  tolerance   String?
-  deadline    DateTime
+  material      String
+  materialGrade String?   // e.g., SS304, 6061-T6, EN8
+  quantity      Int
+  tolerance     String?
+  surfaceFinish String?   // e.g., Anodized, Powder Coated, Brushed
+  deadline      DateTime
   location    String    // City/Pincode
   lat         Float?
   lng         Float?
@@ -145,13 +149,17 @@ model Job {
   oem         User      @relation("JobCreator", fields: [oemId], references: [id])
   
   vendorId    String?
-  vendor      User?     @relation("JobVendor", fields: [vendorId], references: [id])
-  
-  files       JobFile[]
-  logs        JobStatusLog[]
-  
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  vendor        User?          @relation("JobVendor", fields: [vendorId], references: [id])
+  files         JobFile[]
+  logs          JobStatusLog[]
+  bids          Bid[]
+  fileAccessLogs FileAccessLog[]
+
+  targetVendorPrice Float?         // Target price set by Admin when approving
+  minPriceFloor     Float?         // Minimum allowed bid set by Admin
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([oemId])
   @@index([vendorId])
@@ -159,14 +167,64 @@ model Job {
   @@map("jobs")
 }
 
+model Bid {
+  id               String   @id @default(cuid())
+  vendorId         String
+  jobId            String
+  proposedPrice    Float
+  proposedLeadTime Int
+  notes            String?  @db.Text
+  status           BidStatus @default(PENDING)
+  
+  updateCount      Int      @default(0)
+  isLocked         Boolean  @default(false)
+  unlockRequested  Boolean  @default(false)
+
+  rejectionReason  BidRejectionReason?
+  adminFeedback    String?  @db.Text
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  vendor           User     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  job              Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([vendorId, jobId]) // One bid per vendor per job
+  @@index([jobId])
+  @@map("bids")
+}
+
+enum BidRejectionReason {
+  PRICE
+  LEAD_TIME
+  GENERAL
+}
+
+model FileAccessLog {
+  id          String   @id @default(cuid())
+  userId      String
+  fileId      String
+  jobId       String
+  ipAddress   String?
+  accessedAt  DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
 model JobFile {
-  id        String   @id @default(cuid())
-  url       String
-  name      String
-  jobId     String
-  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  fileKey      String   @unique  // S3 object key — NEVER sent to client
+  originalName String            // User-facing display name
+  mimeType     String?
+  size         Int?              // bytes
+  uploadedBy   String            // userId of uploader
+  jobId        String?           // Null for DRAFT files (uploaded before job created)
+  job          Job?     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
 
   @@index([jobId])
+  @@index([uploadedBy])
   @@map("job_files")
 }
 
@@ -181,4 +239,10 @@ model JobStatusLog {
 
   @@index([jobId])
   @@map("job_status_logs")
+}
+
+enum BidStatus {
+  PENDING
+  REJECTED
+  WON
 }
