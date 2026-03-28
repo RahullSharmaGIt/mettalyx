@@ -4,12 +4,22 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 
+import injectionMolding from "@/public/images/injection-molding.jpg";
+import cncMachining from "@/public/images/cnc-machining.jpg";
+import threeDPrinting from "@/public/images/3d-printing.jpg";
+import sheetMetal from "@/public/images/sheet-metal.jpg";
+
+import { StaticImageData } from "next/image";
+
+import Image from "next/image";
+
+
 type ServiceTab = {
   id: string;
   title: string;
   description: string;
   features: string[];
-  image: string;
+  image: StaticImageData;
 };
 
 const services: ServiceTab[] = [
@@ -22,7 +32,7 @@ const services: ServiceTab[] = [
       "100+ plastic, elastomeric, and silicone materials",
       "Automated CMM for fast quality documentation"
     ],
-    image: "https://picsum.photos/500/300?random=1",
+    image: injectionMolding,
   },
   {
     id: "cnc-machining",
@@ -33,7 +43,7 @@ const services: ServiceTab[] = [
       "Wide range of metals and plastics",
       "Fast turnarounds as quick as 1 day"
     ],
-    image: "https://picsum.photos/500/300?random=2",
+    image: cncMachining,
   },
   {
     id: "3d-printing",
@@ -44,7 +54,7 @@ const services: ServiceTab[] = [
       "High-performance engineering materials",
       "Instant quoting and fast production"
     ],
-    image: "https://picsum.photos/500/300?random=3",
+    image: threeDPrinting,
   },
   {
     id: "sheet-metal",
@@ -55,7 +65,7 @@ const services: ServiceTab[] = [
       "Multiple plating and coating options",
       "Scalable from prototypes to production"
     ],
-    image: "https://picsum.photos/500/300?random=4",
+    image: sheetMetal,
   }
 ];
 
@@ -144,14 +154,21 @@ export default function ManufacturingServicesSection() {
               </div>
 
               {/* RIGHT COLUMN */}
-              <div className="flex items-center justify-center overflow-hidden border-4 border-[#0F172A] bg-[#0F172A]">
-                <motion.img
+              <div className="relative flex items-center justify-center overflow-hidden border-4 border-[#0F172A] bg-[#0F172A] min-h-[250px] lg:min-h-full">
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.4 }}
-                  src={activeService.image}
-                  alt={activeService.title}
-                  className="w-full h-full object-cover min-h-[250px] lg:min-h-full"
-                />
+                  className="w-full h-full"
+                >
+                  <Image
+                    src={activeService.image}
+                    alt={activeService.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    priority
+                  />
+                </motion.div>
               </div>
 
             </motion.div>

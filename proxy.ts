@@ -17,17 +17,17 @@ export default auth((req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
   const user = req.auth?.user
-  
+
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
-  
+
   const isAdminRoute = nextUrl.pathname.startsWith(adminRoutes)
   const isOemRoute = nextUrl.pathname.startsWith(oemRoutes)
   const isVendorRoute = nextUrl.pathname.startsWith(vendorRoutes)
 
   if (isApiAuthRoute) {
-    return null 
+    return null
   }
 
   if (isAuthRoute) {
@@ -50,7 +50,12 @@ export default auth((req) => {
 
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-    return Response.redirect(new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl));
+    return Response.redirect(
+      new URL(
+        `/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+        nextUrl.origin // ✅ safer than passing full nextUrl
+      )
+    );
   }
 })
 
