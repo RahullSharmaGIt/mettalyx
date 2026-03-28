@@ -1,3 +1,17 @@
+METALLYX is an on-demand manufacturing marketplace that connects:
+
+OEMs / Traders → who upload manufacturing requirements
+Vendors / Workshops → who perform machining jobs
+Admin / Coordinators → who verify, assign, and oversee jobs
+
+The platform ensures:
+
+Correct vendor-job matching
+Transparency in job progress
+Trust via inspection & reporting
+Scalable outsourcing for manufacturing
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
