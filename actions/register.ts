@@ -42,12 +42,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     await prisma.vendorProfile.create({
       data: {
         userId: user.id,
-        address: "", // To be filled in onboarding
-        city: "",    
-        machines: {},
-        status: "PENDING"
-      }
-    })
+        address: "",
+        city: "",
+        companyName: "",
+        status: "PENDING",
+      },
+    });
   }
 
   return { success: "User created!" };

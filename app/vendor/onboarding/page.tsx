@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { VendorOnboardingForm } from "@/components/vendor/onboarding-form";
+import { OnboardingWizard } from "@/components/vendor/onboarding/onboarding-wizard";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
@@ -7,29 +7,20 @@ import prisma from "@/lib/prisma";
 const VendorOnboardingPage = async () => {
     const session = await auth();
 
-
     if (!session || session.user.role !== UserRole.VENDOR) {
         redirect("/auth/login");
     }
 
     const vendorProfile = await prisma.vendorProfile.findUnique({
-        where: { userId: session.user.id }
+        where: { userId: session.user.id as string },
     });
 
-    if (
-        vendorProfile &&
-        vendorProfile.address &&
-        vendorProfile.city &&
-        vendorProfile.machines
-    ) {
+    // If already onboarded, redirect to dashboard
+    if (vendorProfile?.isOnboarded) {
         redirect("/vendor/dashboard");
     }
 
-    return (
-        <div className="h-full flex items-center justify-center bg-gray-100">
-            <VendorOnboardingForm />
-        </div>
-    );
-}
+    return <OnboardingWizard />;
+};
 
 export default VendorOnboardingPage;

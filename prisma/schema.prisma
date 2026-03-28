@@ -50,20 +50,77 @@ model User {
 }
 
 model VendorProfile {
-  id          String       @id @default(cuid())
-  userId      String       @unique
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                  String       @id @default(cuid())
+  userId              String       @unique
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  status      VendorStatus @default(PENDING)
-  machines    Json         // JSON: { "lathe": 2, "cnc": 1 }
-  address     String
-  city        String
-  lat         Float?
-  lng         Float?
-  verifiedAt  DateTime?
-  isOnboarded Boolean      @default(false)
+  status              VendorStatus @default(PENDING)
+  companyName         String?
+  contactPhone        String?
+  contactEmail        String?
+  gstNumber           String?
+  address             String?
+  city                String?
+  lat                 Float?
+  lng                 Float?            
+  yearsOfExperience   Int?
+  industriesServed    Json?        // e.g., ["Automotive", "Aerospace"]
+  isAgreementAccepted Boolean      @default(false)
+  
+  verifiedAt          DateTime?
+  isOnboarded         Boolean      @default(false)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @default(now()) @updatedAt
+
+  certifications      VendorCertification[]
+  capabilities        VendorCapability?
+  documents           VendorDocument[]
 
   @@map("vendor_profiles")
+}
+
+model VendorCertification {
+  id             String        @id @default(cuid())
+  vendorId       String
+  vendorProfile  VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  name           String        
+  certificateUrl String
+  issuedBy       String?
+  issuedDate     DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([vendorId])
+  @@map("vendor_certifications")
+}
+
+model VendorCapability {
+  id                  String        @id @default(cuid())
+  vendorId            String        @unique
+  vendorProfile       VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  capabilities        String[]      // e.g., ["CNC Machining", "Laser Cutting"]
+  expertiseLevel      String?       // "Beginner", "Intermediate", "Advanced"
+  tolerancesSupported String?
+  maxPartSize         String?
+  minPartSize         String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@map("vendor_capabilities")
+}
+
+model VendorDocument {
+  id             String        @id @default(cuid())
+  vendorId       String
+  vendorProfile  VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  name           String
+  url            String
+  type           String        // e.g., "CERTIFICATE", "SAMPLE_WORK", "COMPLIANCE"
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([vendorId])
+  @@map("vendor_documents")
 }
   
 model Job {

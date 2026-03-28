@@ -34,6 +34,7 @@ const navItems: NavItem[] = [
     { title: "Materials", href: "/vendor/materials", icon: Box },
     { title: "Machines", href: "/vendor/machines", icon: Cpu },
     { title: "Capabilities", href: "/vendor/capabilities", icon: Zap },
+    { title: "Settings", href: "/vendor/dashboard/profile-settings", icon: Settings },
 ];
 
 interface VendorSidebarProps {

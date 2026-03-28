@@ -50,6 +50,7 @@ export const JobList = ({ jobs, vendorLat, vendorLng }: JobListProps) => {
   const [sortBy, setSortBy] = useState<SortOption>("nearest");
 
   // Pre-compute distances once
+  // lets you cache the result of an expensive calculation.
   const jobsWithDistance = useMemo(
     () =>
       jobs.map((job) => {
@@ -128,11 +129,10 @@ export const JobList = ({ jobs, vendorLat, vendorLng }: JobListProps) => {
                     {/* Distance Badge */}
                     <Badge
                       variant="outline"
-                      className={`flex items-center gap-1 text-xs ${
-                        isLocationKnown
+                      className={`flex items-center gap-1 text-xs ${isLocationKnown
                           ? "border-blue-300 text-blue-700"
                           : "border-gray-300 text-gray-400"
-                      }`}
+                        }`}
                     >
                       <MapPin className="h-3 w-3" />
                       {distanceLabel}

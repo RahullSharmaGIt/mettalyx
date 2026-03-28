@@ -1,0 +1,45 @@
+{
+    "companyName": "Acme Manufacturing LLC",
+    "contactPhone": "+1 555 123 4567",
+    "contactEmail": "vendor@acmecnc.com",
+    "address": "123 Industrial Parkway",
+    "city": "Detroit",
+    "lat": 40.7128,
+    "lng": -74.0060,
+    "gstNumber": "12ABCDE3456F7GH",
+    "capabilities": [
+        "CNC Machining",
+        "CNC Turning",
+        "Laser Cutting"
+    ],
+    "expertiseLevel": "Advanced",
+    "tolerancesSupported": "±0.005mm",
+    "maxPartSize": "2000 x 1000 x 1000 mm",
+    "minPartSize": "5 x 5 x 5 mm",
+    "certifications": [
+        {
+            "name": "ISO 9001:2015",
+            "certificateUrl": "https://dummy-storage.com/iso9001.pdf",
+            "issuedBy": "TUV SUD",
+            "issuedDate": "2023-05-10T00:00:00.000Z"
+        }
+    ],
+    "yearsOfExperience": 15,
+    "industriesServed": [
+        "Automotive",
+        "Aerospace"
+    ],
+    "pastWorkDescription": "Manufactured high-precision engine components for top-tier automotive companies.",
+    "sampleWorkFiles": [
+        "https://dummy-storage.com/sample1.jpg",
+        "https://dummy-storage.com/sample2.jpg"
+    ],
+    "isoCertificates": [
+        "https://dummy-storage.com/iso9001.pdf"
+    ],
+    "qualityDocuments": [
+        "https://dummy-storage.com/quality_manual.pdf"
+    ],
+    "complianceProofs": [],
+    "isAgreementAccepted": true
+}

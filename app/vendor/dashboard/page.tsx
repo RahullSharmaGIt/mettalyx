@@ -25,12 +25,7 @@ const VendorDashboardPage = async () => {
         where: { userId: session.user.id }
     });
 
-    if (
-        !vendorProfile ||
-        !vendorProfile.address ||
-        !vendorProfile.city ||
-        !vendorProfile.machines
-    ) {
+    if (!vendorProfile?.isOnboarded) {
         redirect("/vendor/onboarding");
     }
 
