@@ -4,19 +4,22 @@ import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, Briefcase, FileText, Ban, Trophy, Lock } from "lucide-react";
-import { UpdateBidModal } from "@/components/vendor/update-bid-modal";
-import { SecureFileLink } from "@/components/shared/secure-file-link";
+    Briefcase,
+    FileText,
+    Trophy,
+    Ban,
+    Activity,
+    ArrowUpRight,
+    Search
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { IndustrialStatCard } from "@/components/vendor/industrial-stat-card";
+import { IndustrialBidPipeline } from "@/components/vendor/industrial-bid-pipeline";
+import { IndustrialWonJobsList } from "@/components/vendor/industrial-won-jobs-list";
+import { IndustrialPulse } from "@/components/vendor/industrial-pulse";
 
 export const metadata = {
-    title: "Dashboard | Vendor",
+    title: "Vendor Dashboard | METALLYX",
 };
 
 export default async function VendorDashboardPage() {
@@ -34,207 +37,160 @@ export default async function VendorDashboardPage() {
         redirect("/vendor/onboarding");
     }
 
-    // Fetch bids
+    // Fetch bids with all necessary fields for updates
     const bids = await prisma.bid.findMany({
         where: { vendorId: session.user.id },
         include: {
             job: {
                 select: {
+                    id: true,
                     title: true,
                     material: true,
                     quantity: true,
-                    location: true,
+                    status: true,
+                    deadline: true,
                     minPriceFloor: true,
-                    files: { select: { id: true, originalName: true } }
                 }
             }
         },
         orderBy: { updatedAt: "desc" }
     });
 
-    const pendingBids = bids.filter((b: any) => b.status === "PENDING");
-    const wonBids = bids.filter((b: any) => b.status === "WON");
-    const rejectedBids = bids.filter((b: any) => b.status === "REJECTED");
+    const pendingBids = bids.filter((b) => b.status === "PENDING");
+    const wonBids = bids.filter((b) => b.status === "WON");
+    const rejectedBids = bids.filter((b) => b.status === "REJECTED");
+
+    // Map DB bids to Pipeline Props, including modal data
+    const pipelineBids = pendingBids.slice(0, 3).map(b => ({
+        id: b.jobId.slice(-8).toUpperCase(),
+        bidId: b.id,
+        title: b.job.title,
+        qty: b.job.quantity,
+        expiresIn: "48h", // Dynamic calculation later
+        value: b.proposedPrice,
+        proposedLeadTime: b.proposedLeadTime,
+        notes: b.notes,
+        updateCount: b.updateCount,
+        isLocked: b.isLocked,
+        unlockRequested: b.unlockRequested,
+        minPriceFloor: b.job.minPriceFloor,
+        isTopRanked: true,
+        certified: true
+    }));
+
+    // Map DB bids to Won Jobs List Props
+    const recentWonJobs = wonBids.slice(0, 5).map(b => ({
+        id: b.jobId,
+        title: b.job.title,
+        wonTime: "2 HOURS AGO", // Dynamic later
+        value: b.proposedPrice,
+        status: (b.job.status === "IN_PROGRESS" ? "IN PRODUCTION" : "LOGISTICS PENDING") as any,
+        isLocked: b.isLocked,
+        updateCount: b.updateCount
+    }));
 
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8">
-            <div className="flex justify-between items-end">
+        <div className="p-8 space-y-12">
+            {/* Header Section */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
                 <div>
-                    <h1 className="text-3xl font-black uppercase tracking-tight text-slate-900">Vendor Dashboard</h1>
-                    <p className="text-slate-500 mt-2">Manage your quotes and track won jobs.</p>
+                    <h1 className="text-4xl font-[1000] uppercase tracking-tighter text-slate-900 leading-none">
+                        Vendor Dashboard
+                    </h1>
+                    <div className="flex items-center gap-2 mt-4">
+                        <div className="h-2.5 w-2.5 bg-emerald-500 rounded-full animate-pulse" />
+                        <span className="text-xs font-black uppercase text-slate-500 tracking-widest">
+                            Operational Status: High Efficiency – Systems Normal
+                        </span>
+                    </div>
                 </div>
-                {vendorProfile.status === "VERIFIED" && (
-                    <Link href="/vendor/jobs">
-                        <div className="bg-slate-900 text-white hover:bg-slate-800 px-6 py-2 rounded-md font-bold text-sm transition-colors flex items-center gap-2">
-                            <Briefcase className="h-4 w-4" />
-                            Browse New RFQs
-                        </div>
-                    </Link>
-                )}
+
+                <Link href="/vendor/jobs">
+                    <Button size="lg" className="h-16 px-8 bg-[#f97316] hover:bg-[#ea580c] text-white border-4 border-slate-900 rounded-none shadow-[8px_8px_0px_#0F172A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase tracking-widest text-sm">
+                        <Search className="h-5 w-5 mr-3" />
+                        Browse New RFQS
+                    </Button>
+                </Link>
             </div>
 
-            {/* Quick Stats */}
-            <div className="grid gap-6 md:grid-cols-3">
-                <Card className="border-2 border-slate-900">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2 bg-slate-50 border-b border-slate-200">
-                        <CardTitle className="text-sm font-bold uppercase text-slate-600">Active Bids</CardTitle>
-                        <FileText className="h-4 w-4 text-slate-400" />
-                    </CardHeader>
-                    <CardContent className="pt-6">
-                        <div className="text-3xl font-black">{pendingBids.length}</div>
-                    </CardContent>
-                </Card>
-                <Card className="border-2 border-emerald-900">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2 bg-emerald-50 border-b border-emerald-200">
-                        <CardTitle className="text-sm font-bold uppercase text-emerald-800">Jobs Won</CardTitle>
-                        <Trophy className="h-4 w-4 text-emerald-600" />
-                    </CardHeader>
-                    <CardContent className="pt-6">
-                        <div className="text-3xl font-black text-emerald-700">{wonBids.length}</div>
-                    </CardContent>
-                </Card>
-                <Card className="border-2 border-rose-900">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2 bg-rose-50 border-b border-rose-200">
-                        <CardTitle className="text-sm font-bold uppercase text-rose-800">Rejected</CardTitle>
-                        <Ban className="h-4 w-4 text-rose-600" />
-                    </CardHeader>
-                    <CardContent className="pt-6">
-                        <div className="text-3xl font-black text-rose-700">{rejectedBids.length}</div>
-                    </CardContent>
-                </Card>
+            {/* Stat Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <IndustrialStatCard
+                    title="Active Bids"
+                    value={pendingBids.length}
+                    subtitle="Quotes in submission"
+                    icon={FileText}
+                    borderColor="border-[#f97316]"
+                    textColor="text-slate-900"
+                    trend="+2 from last week"
+                />
+                <IndustrialStatCard
+                    title="Jobs Won"
+                    value={wonBids.length}
+                    subtitle="Total fulfillment rate: 94%"
+                    icon={Trophy}
+                    borderColor="border-emerald-500"
+                    textColor="text-slate-900"
+                    statusIcon={Activity}
+                />
+                <IndustrialStatCard
+                    title="Rejected"
+                    value={rejectedBids.length.toString().padStart(2, '0')}
+                    subtitle="Action required for RFQ-902"
+                    icon={Ban}
+                    borderColor="border-rose-500"
+                    textColor="text-slate-900"
+                />
             </div>
 
-            {vendorProfile.status === "PENDING" && (
-                <Alert className="border-amber-200 bg-amber-50 text-amber-800">
-                    <Info className="h-4 w-4 text-amber-600" />
-                    <AlertTitle>Pending Verification</AlertTitle>
-                    <AlertDescription>
-                        Your profile is currently under review by our admin team.
-                        You will be notified once you are verified and can start accepting jobs.
-                    </AlertDescription>
-                </Alert>
-            )}
+            {/* Main Content Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {/* Left Column: Pipeline */}
+                <div className="lg:col-span-2 space-y-8">
+                    <IndustrialBidPipeline bids={pipelineBids} />
 
-            {/* Detail Sections */}
-            <div className="space-y-8">
-                {/* Active Bids */}
-                <section>
-                    <h2 className="text-xl font-bold uppercase tracking-tight text-slate-900 mb-4 border-b-2 border-slate-200 pb-2">My Active Bids</h2>
-                    {pendingBids.length === 0 ? (
-                        <p className="text-slate-500 italic text-sm">No active bids.</p>
-                    ) : (
-                        <div className="grid gap-4">
-                            {pendingBids.map((bid: any) => (
-                                <div key={bid.id} className="p-4 border border-slate-200 rounded-lg bg-white shadow-sm hover:border-slate-300 transition-colors">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="font-bold text-slate-900">{bid.job.title}</p>
-                                            <p className="text-xs text-slate-500 mb-2">{bid.job.material} • {bid.job.quantity} units</p>
-
-                                            <div className="flex items-center gap-2 mt-1">
-                                                {bid.isLocked ? (
-                                                    <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 cursor-help" title="This bid is locked from further edits without admin review.">
-                                                        <Lock className="h-3 w-3 mr-1 inline" /> Locked
-                                                    </Badge>
-                                                ) : bid.updateCount < 1 ? (
-                                                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                                                        1 Free Revision
-                                                    </Badge>
-                                                ) : null}
-                                            </div>
-                                        </div>
-                                        <div className="text-right flex flex-col items-end gap-2">
-                                            <div>
-                                                <p className="font-bold text-lg leading-tight">₹{bid.proposedPrice.toLocaleString()}</p>
-                                                <p className="text-xs text-slate-500">{bid.proposedLeadTime} Days Lead</p>
-                                            </div>
-                                            <div className="w-full min-w-[140px] mt-2">
-                                                <UpdateBidModal
-                                                    bidId={bid.id}
-                                                    currentPrice={bid.proposedPrice}
-                                                    currentLeadTime={bid.proposedLeadTime}
-                                                    currentNotes={bid.notes}
-                                                    updateCount={bid.updateCount}
-                                                    isLocked={bid.isLocked}
-                                                    unlockRequested={bid.unlockRequested}
-                                                    minPriceFloor={bid.job.minPriceFloor}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                    {/* Visual Insight Image Blocks (matching image footer) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="group relative h-[300px] border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_#0F172A]">
+                            <img
+                                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop"
+                                alt="Factory"
+                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent p-6 flex flex-col justify-end">
+                                <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-[0.3em] mb-2">Facility Insights</span>
+                                <h3 className="text-2xl font-black text-white uppercase leading-tight group-hover:text-[#f97316] transition-colors">Optimization Protocol Alpha</h3>
+                            </div>
                         </div>
-                    )}
-                </section>
-
-                {/* Won Jobs */}
-                <section>
-                    <h2 className="text-xl font-bold uppercase tracking-tight text-emerald-800 border-b-2 border-emerald-200 pb-2 mb-4">Won Jobs</h2>
-                    {wonBids.length === 0 ? (
-                        <p className="text-emerald-700/60 italic text-sm">No won jobs yet.</p>
-                    ) : (
-                        <div className="grid gap-4">
-                            {wonBids.map((bid: any) => (
-                                <div key={bid.id} className="flex flex-col sm:flex-row justify-between gap-4 sm:items-center p-4 border-2 border-emerald-200 rounded-lg bg-emerald-50">
-                                    <div className="flex-1">
-                                        <p className="font-bold text-emerald-900">{bid.job.title}</p>
-                                        <div className="flex items-center gap-2 mt-1.5">
-                                            <Badge className="bg-emerald-500 hover:bg-emerald-600">AWARDED</Badge>
-                                            <span className="text-sm font-semibold text-emerald-800">₹{bid.proposedPrice.toLocaleString()}</span>
-                                        </div>
-                                    </div>
-                                    <div className="shrink-0 w-full sm:w-64 space-y-2">
-                                        {bid.job.files && bid.job.files.length > 0 ? (
-                                            bid.job.files.map((file: any) => (
-                                                <div key={file.id} className="bg-white rounded-md shadow-sm">
-                                                    <SecureFileLink fileId={file.id} originalName={file.originalName} />
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-xs text-emerald-700 italic">No files attached.</p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
+                        <div className="group relative h-[300px] border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_#0F172A]">
+                            <img
+                                src="https://images.unsplash.com/photo-1590001000181-7994784a9235?q=80&w=800&auto=format&fit=crop"
+                                alt="Quality"
+                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent p-6 flex flex-col justify-end">
+                                <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-[0.3em] mb-2">Quality Control</span>
+                                <h3 className="text-2xl font-black text-white uppercase leading-tight group-hover:text-[#f97316] transition-colors">99.8% Tolerance Accuracy</h3>
+                            </div>
                         </div>
-                    )}
-                </section>
+                    </div>
+                </div>
 
-                {/* Rejected Bids */}
-                {rejectedBids.length > 0 && (
-                    <section>
-                        <h2 className="text-xl font-bold uppercase tracking-tight text-slate-800 border-b-2 border-slate-200 pb-2 mb-4">Past Bids</h2>
-                        <div className="grid gap-4 opacity-80">
-                            {rejectedBids.map((bid: any) => (
-                                <div key={bid.id} className="p-4 border border-slate-200 rounded-lg bg-slate-50 space-y-3">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="font-bold text-slate-900 line-through decoration-slate-400">{bid.job.title}</p>
-                                            <Badge variant="secondary" className="mt-1 bg-slate-200 text-slate-600 hover:bg-slate-300">Not Awarded</Badge>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="font-medium text-slate-500 line-through">₹{bid.proposedPrice.toLocaleString()}</p>
-                                        </div>
-                                    </div>
-                                    {(bid.rejectionReason || bid.adminFeedback) && (
-                                        <div className="bg-white p-3 rounded border border-slate-100 text-sm flex gap-2 items-start shadow-sm">
-                                            <Info className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-                                            <div>
-                                                {bid.rejectionReason === "PRICE" && <p className="font-medium text-slate-700">Feedback: Price was not competitive.</p>}
-                                                {bid.rejectionReason === "LEAD_TIME" && <p className="font-medium text-slate-700">Feedback: Lead time was too long.</p>}
-                                                {bid.rejectionReason === "GENERAL" && <p className="font-medium text-slate-700">Feedback: Job awarded to another partner.</p>}
-                                                {bid.adminFeedback && (
-                                                    <p className="text-slate-600 mt-1 italic">"{bid.adminFeedback}"</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                {/* Right Column: Won Jobs & Pulse */}
+                <div className="space-y-8">
+                    <IndustrialWonJobsList jobs={recentWonJobs} />
+                    <IndustrialPulse />
+
+                    <div className="bg-[#f97316] border-4 border-slate-900 p-8 shadow-[8px_8px_0px_#0F172A] group cursor-pointer hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                        <div className="flex justify-between items-start">
+                            <h3 className="text-xl font-black text-white uppercase leading-tight">Export Optimization Report</h3>
+                            <ArrowUpRight className="h-6 w-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </div>
-                    </section>
-                )}
+                        <p className="text-[10px] font-bold text-white uppercase tracking-widest mt-4 opacity-80">
+                            Available for Batch #409
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );

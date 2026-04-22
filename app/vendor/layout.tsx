@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { VendorLayoutWrapper } from "@/components/vendor/vendor-layout-wrapper";
+import { IndustrialLayoutWrapper } from "@/components/vendor/industrial-layout-wrapper";
 
 export default async function VendorLayout({
     children,
@@ -23,8 +23,8 @@ export default async function VendorLayout({
     const vendorName = user?.companyName || user?.name || "Vendor";
 
     return (
-        <VendorLayoutWrapper vendorName={vendorName}>
+        <IndustrialLayoutWrapper vendorName={vendorName}>
             {children}
-        </VendorLayoutWrapper>
+        </IndustrialLayoutWrapper>
     );
 }
