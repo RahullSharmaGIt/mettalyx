@@ -1,6 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { logout } from "@/app/dashboard/actions";
+
 import {
     LayoutDashboard,
     Briefcase,
@@ -106,6 +108,7 @@ export const OEMSidebarDrawer = () => {
                         {/* Footer */}
                         <div className="p-4 border-t-4 border-slate-900 bg-slate-100">
                             <Button
+                                onClick={() => logout()}
                                 variant="ghost"
                                 className="w-full flex items-center justify-start gap-4 p-6 border-2 border-slate-900 bg-white shadow-[4px_4px_0px_#0F172A] hover:bg-red-50 hover:border-red-600 hover:text-red-600 group"
                             >
