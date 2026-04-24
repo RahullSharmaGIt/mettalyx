@@ -164,7 +164,7 @@ export default async function VendorDashboardPage() {
                         </div>
                         <div className="group relative h-[300px] border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_#0F172A]">
                             <img
-                                src="https://images.unsplash.com/photo-1590001000181-7994784a9235?q=80&w=800&auto=format&fit=crop"
+                                src="https://plus.unsplash.com/premium_photo-1682144880138-9f1c0bfe6fa7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                 alt="Quality"
                                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
                             />
