@@ -54,43 +54,43 @@ const AdminOEMPage = async () => {
   });
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-8 space-y-8 bg-slate-50/50 min-h-screen">
       <div>
-        <h1 className="text-3xl font-bold">Job Management</h1>
-        <p className="text-muted-foreground">Review, approve, and manage all OEM jobs</p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Job Management</h1>
+        <p className="text-xs text-slate-500 font-medium mt-0.5">Review, approve, and manage all OEM job submissions</p>
       </div>
 
       {/* Bid Unlock Requests Section */}
       {unlockRequests.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-900">
+        <div className="space-y-4">
+          <h2 className="text-base font-semibold flex items-center gap-2 text-slate-900">
             Inbox: Bid Unlock Requests
-            <Badge className="bg-indigo-600">{unlockRequests.length}</Badge>
+            <Badge className="bg-slate-900 text-white rounded-full px-2 text-xs">{unlockRequests.length}</Badge>
           </h2>
           <div className="grid gap-4">
             {unlockRequests.map((bid) => (
-              <Card key={bid.id} className="border-indigo-200 bg-indigo-50/50">
-                <CardHeader className="py-4">
+              <Card key={bid.id} className="border border-slate-200 bg-white rounded-2xl shadow-sm overflow-hidden">
+                <CardHeader className="py-4 border-b border-slate-100 bg-slate-50/50">
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-lg">
+                      <CardTitle className="text-base font-semibold text-slate-900">
                         {bid.vendor.companyName} ({bid.vendor.name})
                       </CardTitle>
-                      <p className="text-sm text-slate-600 mt-1 flex items-center gap-1">
-                        <Factory className="h-3 w-3" /> Job: {bid.job.title}
+                      <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                        <Factory className="h-3.5 w-3.5 text-slate-400" /> Job: {bid.job.title}
                       </p>
                     </div>
                     <form action={unlockBid.bind(null, bid.id)}>
-                      <Button type="submit" size="sm" className="bg-indigo-600 hover:bg-indigo-700 max-h-8">
-                        <Unlock className="h-4 w-4 mr-2" />
+                      <Button type="submit" size="sm" className="bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-medium">
+                        <Unlock className="h-3.5 w-3.5 mr-1.5" />
                         Approve Unlock
                       </Button>
                     </form>
                   </div>
                 </CardHeader>
-                <CardContent className="py-0 pb-4">
-                  <p className="text-sm text-slate-700 bg-white p-3 rounded border border-indigo-100">
-                    <span className="font-semibold block mb-1">Vendor's Current Bid:</span>
+                <CardContent className="pt-4 pb-4">
+                  <p className="text-xs text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200/60">
+                    <span className="font-semibold block mb-1 text-slate-900">Vendor's Current Bid:</span>
                     Price: ₹{bid.proposedPrice.toLocaleString()} • Lead Time: {bid.proposedLeadTime} Days <br />
                     {bid.notes && <span className="text-slate-500 italic mt-1 block">"{bid.notes}"</span>}
                   </p>
@@ -102,81 +102,81 @@ const AdminOEMPage = async () => {
       )}
 
       {/* Pending Review Section */}
-      <div>
-        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+      <div className="space-y-4">
+        <h2 className="text-base font-semibold flex items-center gap-2 text-slate-900">
           Pending Approval
           {pendingJobs.length > 0 && (
-            <Badge className="bg-amber-500">{pendingJobs.length}</Badge>
+            <Badge className="bg-slate-900 text-white rounded-full px-2 text-xs">{pendingJobs.length}</Badge>
           )}
         </h2>
 
         {pendingJobs.length === 0 ? (
-          <Card>
-            <CardContent className="pt-6">
-              <p className="text-center text-muted-foreground">No jobs pending review</p>
+          <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white">
+            <CardContent className="py-8">
+              <p className="text-center text-xs font-medium text-slate-500">No jobs pending review</p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid gap-4">
             {pendingJobs.map((job) => (
-              <Card key={job.id} className="border-amber-200">
-                <CardHeader>
+              <Card key={job.id} className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
-                      <CardTitle>{job.title}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
+                      <CardTitle className="text-base font-bold text-slate-900">{job.title}</CardTitle>
+                      <p className="text-xs text-slate-500">
                         Submitted by {job.oem.name} ({job.oem.companyName || job.oem.email})
                       </p>
                     </div>
-                    <Badge variant="outline">PENDING REVIEW</Badge>
+                    <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 rounded-md text-xs font-medium">PENDING REVIEW</Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 pt-4">
                   {job.description && (
-                    <p className="text-sm text-muted-foreground">{job.description}</p>
+                    <p className="text-xs text-slate-600">{job.description}</p>
                   )}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                     <div className="flex items-center gap-2">
-                      <Package className="h-4 w-4 text-muted-foreground" />
+                      <Package className="h-3.5 w-3.5 text-slate-400" />
                       <div>
-                        <p className="font-medium">Material</p>
-                        <p className="text-muted-foreground">
+                        <p className="font-semibold text-slate-800">Material</p>
+                        <p className="text-slate-500">
                           {job.material}{job.materialGrade ? ` · ${job.materialGrade}` : ""}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Package className="h-4 w-4 text-muted-foreground" />
+                      <Package className="h-3.5 w-3.5 text-slate-400" />
                       <div>
-                        <p className="font-medium">Quantity</p>
-                        <p className="text-muted-foreground">{job.quantity}</p>
+                        <p className="font-semibold text-slate-800">Quantity</p>
+                        <p className="text-slate-500">{job.quantity}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <Calendar className="h-3.5 w-3.5 text-slate-400" />
                       <div>
-                        <p className="font-medium">Deadline</p>
-                        <p className="text-muted-foreground">{new Date(job.deadline).toLocaleDateString()}</p>
+                        <p className="font-semibold text-slate-800">Deadline</p>
+                        <p className="text-slate-500">{new Date(job.deadline).toLocaleDateString()}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <MapPin className="h-3.5 w-3.5 text-slate-400" />
                       <div>
-                        <p className="font-medium">Location</p>
-                        <p className="text-muted-foreground">{job.location}</p>
+                        <p className="font-semibold text-slate-800">Location</p>
+                        <p className="text-slate-500">{job.location}</p>
                       </div>
                     </div>
                   </div>
                   {job.surfaceFinish && (
-                    <p className="text-sm"><span className="font-medium">Surface Finish: </span>{job.surfaceFinish}</p>
+                    <p className="text-xs text-slate-600"><span className="font-semibold text-slate-800">Surface Finish: </span>{job.surfaceFinish}</p>
                   )}
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2 pt-2 border-t border-slate-100">
                     <JobApprovalDialog jobId={job.id} />
                     <form action={rejectJob.bind(null, job.id)}>
-                      <Button type="submit" variant="destructive" size="sm">Reject</Button>
+                      <Button type="submit" variant="outline" size="sm" className="border-rose-200 text-rose-600 hover:bg-rose-50 rounded-lg text-xs">Reject</Button>
                     </form>
                     <Link href={`/admin/jobs/${job.id}`}>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-xs">
                         View Detail <ChevronRight className="h-3.5 w-3.5 ml-1" />
                       </Button>
                     </Link>
@@ -190,28 +190,28 @@ const AdminOEMPage = async () => {
 
       {/* All Other Jobs */}
       {otherJobs.length > 0 && (
-        <div>
-          <h2 className="text-xl font-bold mb-4">All Jobs</h2>
-          <Card>
-            <CardHeader className="border-b bg-slate-50">
-              <CardTitle className="text-base font-bold uppercase">Job Pipeline</CardTitle>
+        <div className="space-y-4">
+          <h2 className="text-base font-semibold text-slate-900">All Jobs</h2>
+          <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-6">
+              <CardTitle className="text-xs font-semibold uppercase text-slate-500">Job Pipeline</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y divide-slate-100">
                 {otherJobs.map((job) => (
-                  <div key={job.id} className="flex items-center gap-4 p-4 hover:bg-slate-50 group">
+                  <div key={job.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50/60 transition-colors group">
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 truncate">{job.title}</p>
-                      <p className="text-sm text-slate-500 mt-0.5">
+                      <p className="font-semibold text-sm text-slate-900 truncate">{job.title}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">
                         {job.material}{job.materialGrade ? ` · ${job.materialGrade}` : ""} · {job.quantity} units · {job.location}
                       </p>
                     </div>
-                    <Badge className={STATUS_COLORS[job.status] ?? "bg-gray-400"}>
+                    <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-200 text-xs rounded-md font-medium">
                       {job.status.replace(/_/g, " ")}
                     </Badge>
                     <Link href={`/admin/jobs/${job.id}`}>
-                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ChevronRight className="h-4 w-4" />
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-lg">
+                        <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
                       </Button>
                     </Link>
                   </div>

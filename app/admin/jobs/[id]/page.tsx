@@ -98,20 +98,20 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
     const currentVendorId = job.vendorId;
 
     return (
-        <div className="p-8 max-w-5xl mx-auto space-y-6">
+        <div className="p-8 max-w-5xl mx-auto space-y-6 bg-slate-50/50 min-h-screen">
             {/* Header */}
             <div className="flex items-center gap-4">
                 <Link href="/admin/oem">
-                    <Button variant="ghost" size="sm"><ArrowLeft className="h-4 w-4 mr-1" /> Back to Jobs</Button>
+                    <Button variant="ghost" size="sm" className="rounded-lg text-xs text-slate-600"><ArrowLeft className="h-4 w-4 mr-1" /> Back to Jobs</Button>
                 </Link>
                 <div className="flex-1">
-                    <h1 className="text-2xl font-black uppercase tracking-tight">{job.title}</h1>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <h1 className="text-xl font-bold tracking-tight text-slate-900">{job.title}</h1>
+                    <p className="text-xs text-slate-500 mt-0.5">
                         By {job.oem.companyName || job.oem.name} ({job.oem.email}) ·{" "}
                         {new Date(job.createdAt).toLocaleDateString("en-IN", { dateStyle: "long" })}
                     </p>
                 </div>
-                <Badge className={STATUS_COLORS[job.status] ?? "bg-gray-400"}>
+                <Badge variant="outline" className="bg-slate-100 text-slate-800 border-slate-200 text-xs rounded-md font-medium">
                     {job.status.replace(/_/g, " ")}
                 </Badge>
             </div>
@@ -119,9 +119,9 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left: full specs */}
                 <div className="lg:col-span-2 space-y-5">
-                    <Card className="border-2 border-slate-900">
-                        <CardHeader className="border-b-2 border-slate-900 bg-slate-50 py-4 px-5">
-                            <CardTitle className="text-base font-bold uppercase">Job Specifications</CardTitle>
+                    <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                        <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
+                            <CardTitle className="text-xs font-semibold uppercase text-slate-500">Job Specifications</CardTitle>
                         </CardHeader>
                         <CardContent className="p-5 grid grid-cols-2 gap-4">
                             <Spec icon={<Package />} label="Material" value={job.material} />
@@ -135,20 +135,20 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                     </Card>
 
                     {job.description && (
-                        <Card className="border-2 border-slate-900">
-                            <CardHeader className="border-b-2 border-slate-900 bg-slate-50 py-4 px-5">
-                                <CardTitle className="text-base font-bold uppercase">Description</CardTitle>
+                        <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
+                                <CardTitle className="text-xs font-semibold uppercase text-slate-500">Description</CardTitle>
                             </CardHeader>
                             <CardContent className="p-5">
-                                <p className="text-sm text-slate-700 leading-relaxed">{job.description}</p>
+                                <p className="text-xs text-slate-700 leading-relaxed">{job.description}</p>
                             </CardContent>
                         </Card>
                     )}
 
                     {job.files.length > 0 && (
-                        <Card className="border-2 border-slate-900">
-                            <CardHeader className="border-b-2 border-slate-900 bg-slate-50 py-4 px-5">
-                                <CardTitle className="text-base font-bold uppercase">Attached Files</CardTitle>
+                        <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
+                                <CardTitle className="text-xs font-semibold uppercase text-slate-500">Attached Files</CardTitle>
                             </CardHeader>
                             <CardContent className="p-5 space-y-2">
                                 {job.files.map((f) => (
@@ -164,9 +164,9 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
 
                     {/* Bid Analysis — visible only to Admin */}
                     {job.bids.length > 0 ? (
-                        <Card className="border-2 border-slate-900">
-                            <CardHeader className="border-b-2 border-slate-900 bg-emerald-50 py-4 px-5">
-                                <CardTitle className="text-base font-bold uppercase text-emerald-900">
+                        <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
+                                <CardTitle className="text-xs font-semibold uppercase text-slate-900">
                                     Bid Analysis ({job.bids.length})
                                 </CardTitle>
                             </CardHeader>
@@ -257,10 +257,10 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                             </CardContent>
                         </Card>
                     ) : (
-                        <Card className="border-2 border-slate-900">
-                            <CardHeader className="border-b-2 border-slate-900 bg-slate-50 py-4 px-5">
+                        <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-base font-bold uppercase">
+                                    <CardTitle className="text-xs font-semibold uppercase text-slate-500">
                                         Verified Vendors {rankedVendors.length > 0 && `(${rankedVendors.length})`}
                                     </CardTitle>
                                     {!isAssignable && (
@@ -272,7 +272,7 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                             </CardHeader>
                             <CardContent className="p-0">
                                 {rankedVendors.length === 0 ? (
-                                    <p className="p-5 text-sm text-slate-400 text-center italic">No verified vendors available</p>
+                                    <p className="p-5 text-xs text-slate-400 text-center italic">No verified vendors available</p>
                                 ) : (
                                     <div className="divide-y divide-slate-100">
                                         {rankedVendors.map((vendor) => {
@@ -284,20 +284,19 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                                             return (
                                                 <div
                                                     key={vendor.id}
-                                                    className={`flex items-center justify-between p-4 ${isCurrentVendor ? "bg-blue-50" : "hover:bg-slate-50"}`}
+                                                    className={`flex items-center justify-between p-4 ${isCurrentVendor ? "bg-slate-50" : "hover:bg-slate-50/60"}`}
                                                 >
                                                     <div className="min-w-0 flex-1">
                                                         <div className="flex items-center gap-2">
                                                             <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
-                                                            {/* Admin sees region only (city), not full company name leaked to OEM */}
-                                                            <p className="text-sm font-semibold text-slate-800">
+                                                            <p className="text-xs font-semibold text-slate-800">
                                                                 {vendor.city ?? "Region unavailable"}
                                                             </p>
                                                             {isCurrentVendor && (
-                                                                <Badge className="bg-blue-500 text-xs">Currently Assigned</Badge>
+                                                                <Badge className="bg-slate-900 text-white text-[10px] rounded-md">Currently Assigned</Badge>
                                                             )}
                                                             {vendor.matchScore > 0 && (
-                                                                <Badge variant="outline" className="text-emerald-700 border-emerald-300 text-xs">
+                                                                <Badge variant="outline" className="text-emerald-700 border-emerald-300 text-[10px] rounded-md">
                                                                     <Zap className="h-2.5 w-2.5 mr-1" /> Capability Match
                                                                 </Badge>
                                                             )}
@@ -305,10 +304,10 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                                                         {caps.length > 0 && (
                                                             <div className="flex flex-wrap gap-1 mt-1.5 ml-6">
                                                                 {caps.slice(0, 4).map((c) => (
-                                                                    <span key={c} className="text-xs px-1.5 py-0.5 bg-slate-100 rounded text-slate-600">{c}</span>
+                                                                    <span key={c} className="text-[10px] px-1.5 py-0.5 bg-slate-100 rounded text-slate-600 font-mono">{c}</span>
                                                                 ))}
                                                                 {caps.length > 4 && (
-                                                                    <span className="text-xs text-slate-400">+{caps.length - 4} more</span>
+                                                                    <span className="text-[10px] text-slate-400">+{caps.length - 4} more</span>
                                                                 )}
                                                             </div>
                                                         )}
@@ -321,7 +320,7 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                                                                 vendorDisplayName={`Vendor — ${vendor.city ?? "Unknown Region"}`}
                                                             />
                                                         ) : (
-                                                            <Button size="sm" variant="outline" disabled>Assign</Button>
+                                                            <Button size="sm" variant="outline" disabled className="rounded-lg text-xs">Assign</Button>
                                                         )}
                                                     </div>
                                                 </div>
@@ -338,15 +337,15 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                 <div className="space-y-5">
                     {/* Current assignment */}
                     {currentVendorId && job.vendor && (
-                        <Card className="border-2 border-slate-900">
-                            <CardHeader className="border-b-2 border-slate-900 bg-blue-50 py-4 px-5">
-                                <CardTitle className="text-base font-bold uppercase flex items-center gap-2">
-                                    <ShieldCheck className="h-4 w-4 text-blue-600" />
+                        <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
+                                <CardTitle className="text-xs font-semibold uppercase text-slate-900 flex items-center gap-2">
+                                    <ShieldCheck className="h-4 w-4 text-slate-700" />
                                     Assigned Partner
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-5">
-                                <p className="font-semibold text-slate-800 text-sm">
+                                <p className="font-semibold text-slate-800 text-xs">
                                     {job.vendor.vendorProfile?.companyName}
                                 </p>
                                 <p className="text-xs text-slate-500 mt-1">
@@ -358,9 +357,9 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
 
                     {/* Status Log */}
                     {job.logs.length > 0 && (
-                        <Card className="border-2 border-slate-900">
-                            <CardHeader className="border-b-2 border-slate-900 bg-slate-50 py-4 px-5">
-                                <CardTitle className="text-base font-bold uppercase">Status Log</CardTitle>
+                        <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white overflow-hidden">
+                            <CardHeader className="border-b border-slate-100 bg-slate-50/50 py-3.5 px-5">
+                                <CardTitle className="text-xs font-semibold uppercase text-slate-500">Status Log</CardTitle>
                             </CardHeader>
                             <CardContent className="p-5">
                                 <div className="space-y-3">
@@ -371,11 +370,11 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                                                 {i < job.logs.length - 1 && <div className="w-px flex-1 bg-slate-200 mt-1 mb-1" />}
                                             </div>
                                             <div className="pb-3">
-                                                <p className="text-xs font-bold uppercase text-slate-700">
+                                                <p className="text-xs font-semibold text-slate-800">
                                                     {log.status.replace(/_/g, " ")}
                                                 </p>
                                                 {log.note && <p className="text-xs text-slate-500 mt-0.5">{log.note}</p>}
-                                                <p className="text-xs text-slate-400 mt-0.5">
+                                                <p className="text-[10px] text-slate-400 mt-0.5">
                                                     {new Date(log.createdAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}
                                                 </p>
                                             </div>
@@ -387,22 +386,22 @@ const AdminJobDetailPage = async ({ params }: { params: Promise<{ id: string }> 
                     )}
 
                     {/* Quick stats */}
-                    <Card className="border-2 border-slate-900">
+                    <Card className="border border-slate-200 rounded-2xl shadow-sm bg-white">
                         <CardContent className="p-5 space-y-3">
-                            <div className="flex items-center gap-2 text-sm">
-                                <CheckCircle className="h-4 w-4 text-emerald-500" />
-                                <span className="text-slate-600">Status:</span>
-                                <span className="font-semibold">{job.status.replace(/_/g, " ")}</span>
+                            <div className="flex items-center gap-2 text-xs">
+                                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                                <span className="text-slate-500">Status:</span>
+                                <span className="font-semibold text-slate-800">{job.status.replace(/_/g, " ")}</span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm">
+                            <div className="flex items-center gap-2 text-xs">
                                 <Calendar className="h-4 w-4 text-slate-400" />
-                                <span className="text-slate-600">Due:</span>
-                                <span className="font-semibold">{new Date(job.deadline).toLocaleDateString()}</span>
+                                <span className="text-slate-500">Due:</span>
+                                <span className="font-semibold text-slate-800">{new Date(job.deadline).toLocaleDateString()}</span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm">
+                            <div className="flex items-center gap-2 text-xs">
                                 <Package className="h-4 w-4 text-slate-400" />
-                                <span className="text-slate-600">Qty:</span>
-                                <span className="font-semibold">{job.quantity} units</span>
+                                <span className="text-slate-500">Qty:</span>
+                                <span className="font-semibold text-slate-800">{job.quantity} units</span>
                             </div>
                         </CardContent>
                     </Card>

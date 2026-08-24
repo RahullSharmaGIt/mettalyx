@@ -90,37 +90,37 @@ export default async function VendorDashboardPage() {
     }));
 
     return (
-        <div className="p-8 space-y-12">
+        <div className="p-8 space-y-8">
             {/* Header Section */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-4xl font-[1000] uppercase tracking-tighter text-slate-900 leading-none">
+                    <h1 className="text-2xl font-bold tracking-tight text-slate-900">
                         Vendor Dashboard
                     </h1>
-                    <div className="flex items-center gap-2 mt-4">
-                        <div className="h-2.5 w-2.5 bg-emerald-500 rounded-full animate-pulse" />
-                        <span className="text-xs font-black uppercase text-slate-500 tracking-widest">
-                            Operational Status: High Efficiency – Systems Normal
+                    <div className="flex items-center gap-2 mt-1">
+                        <div className="h-2 w-2 bg-emerald-500 rounded-full" />
+                        <span className="text-xs text-slate-500 font-medium">
+                            System Status: Operational • All Services Running
                         </span>
                     </div>
                 </div>
 
                 <Link href="/vendor/jobs">
-                    <Button size="lg" className="h-16 px-8 bg-[#f97316] hover:bg-[#ea580c] text-white border-4 border-slate-900 rounded-none shadow-[8px_8px_0px_#0F172A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all font-black uppercase tracking-widest text-sm">
-                        <Search className="h-5 w-5 mr-3" />
-                        Browse New RFQS
+                    <Button size="lg" className="h-11 px-5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-sm transition-all font-medium text-sm">
+                        <Search className="h-4 w-4 mr-2" />
+                        Browse New RFQs
                     </Button>
                 </Link>
             </div>
 
             {/* Stat Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <IndustrialStatCard
                     title="Active Bids"
                     value={pendingBids.length}
                     subtitle="Quotes in submission"
                     icon={FileText}
-                    borderColor="border-[#f97316]"
+                    borderColor="border-slate-200"
                     textColor="text-slate-900"
                     trend="+2 from last week"
                 />
@@ -129,7 +129,7 @@ export default async function VendorDashboardPage() {
                     value={wonBids.length}
                     subtitle="Total fulfillment rate: 94%"
                     icon={Trophy}
-                    borderColor="border-emerald-500"
+                    borderColor="border-slate-200"
                     textColor="text-slate-900"
                     statusIcon={Activity}
                 />
@@ -138,55 +138,55 @@ export default async function VendorDashboardPage() {
                     value={rejectedBids.length.toString().padStart(2, '0')}
                     subtitle="Action required for RFQ-902"
                     icon={Ban}
-                    borderColor="border-rose-500"
+                    borderColor="border-slate-200"
                     textColor="text-slate-900"
                 />
             </div>
 
             {/* Main Content Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                 {/* Left Column: Pipeline */}
-                <div className="lg:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-6">
                     <IndustrialBidPipeline bids={pipelineBids} />
 
-                    {/* Visual Insight Image Blocks (matching image footer) */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="group relative h-[300px] border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_#0F172A]">
+                    {/* Visual Insight Image Blocks */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="group relative h-[240px] rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                             <img
                                 src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop"
                                 alt="Factory"
-                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
+                                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent p-6 flex flex-col justify-end">
-                                <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-[0.3em] mb-2">Facility Insights</span>
-                                <h3 className="text-2xl font-black text-white uppercase leading-tight group-hover:text-[#f97316] transition-colors">Optimization Protocol Alpha</h3>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end">
+                                <span className="text-xs font-semibold text-slate-300 tracking-wider uppercase mb-1">Facility Insights</span>
+                                <h3 className="text-lg font-bold text-white leading-snug">Optimization Protocol Alpha</h3>
                             </div>
                         </div>
-                        <div className="group relative h-[300px] border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0px_#0F172A]">
+                        <div className="group relative h-[240px] rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                             <img
                                 src="https://plus.unsplash.com/premium_photo-1682144880138-9f1c0bfe6fa7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                 alt="Quality"
-                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
+                                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent p-6 flex flex-col justify-end">
-                                <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-[0.3em] mb-2">Quality Control</span>
-                                <h3 className="text-2xl font-black text-white uppercase leading-tight group-hover:text-[#f97316] transition-colors">99.8% Tolerance Accuracy</h3>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-6 flex flex-col justify-end">
+                                <span className="text-xs font-semibold text-slate-300 tracking-wider uppercase mb-1">Quality Control</span>
+                                <h3 className="text-lg font-bold text-white leading-snug">99.8% Tolerance Accuracy</h3>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Right Column: Won Jobs & Pulse */}
-                <div className="space-y-8">
+                <div className="space-y-6">
                     <IndustrialWonJobsList jobs={recentWonJobs} />
                     <IndustrialPulse />
 
-                    <div className="bg-[#f97316] border-4 border-slate-900 p-8 shadow-[8px_8px_0px_#0F172A] group cursor-pointer hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                    <div className="bg-slate-900 text-white rounded-2xl border border-slate-800 p-6 shadow-sm group cursor-pointer hover:bg-slate-800 transition-all">
                         <div className="flex justify-between items-start">
-                            <h3 className="text-xl font-black text-white uppercase leading-tight">Export Optimization Report</h3>
-                            <ArrowUpRight className="h-6 w-6 text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            <h3 className="text-base font-semibold text-white leading-snug">Export Optimization Report</h3>
+                            <ArrowUpRight className="h-5 w-5 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                         </div>
-                        <p className="text-[10px] font-bold text-white uppercase tracking-widest mt-4 opacity-80">
+                        <p className="text-xs text-slate-400 font-medium mt-3">
                             Available for Batch #409
                         </p>
                     </div>

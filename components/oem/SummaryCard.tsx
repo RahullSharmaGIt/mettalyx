@@ -16,25 +16,24 @@ export const SummaryCard = ({
     subtitle,
     icon: Icon,
     bgColor = "bg-white",
-    iconColor = "text-slate-900",
+    iconColor = "text-slate-700",
 }: SummaryCardProps) => {
     return (
-        <div className={cn(
-            "border-2 border-slate-900 p-6 flex flex-col gap-4 shadow-[#0F172A] shadow-[4px_4px_0px_0px] transition-all",
-            bgColor
-        )}>
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 relative flex flex-col justify-between h-[180px] shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-center">
-                <span className="text-sm font-black uppercase tracking-wider text-slate-900">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     {title}
                 </span>
-                <Icon className={cn("h-6 w-6", iconColor)} />
+                <div className="h-10 w-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                    <Icon className={cn("h-5 w-5", iconColor)} />
+                </div>
             </div>
 
-            <div className="flex flex-col gap-1 mt-8">
-                <span className="text-5xl font-black text-slate-900">
+            <div className="flex flex-col gap-1 mt-3">
+                <span className="text-4xl font-bold text-slate-900 tracking-tight">
                     {value}
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-tight text-slate-600">
+                <span className="text-xs text-slate-500 font-medium">
                     {subtitle}
                 </span>
             </div>

@@ -115,90 +115,90 @@ export function UpdateBidModal({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-2 border-slate-900 rounded-none font-black uppercase text-[10px] tracking-widest h-10 shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center justify-center gap-2">
+                <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-medium text-xs h-9 shadow-sm transition-all flex items-center justify-center gap-2">
                     <Edit2 className="h-3.5 w-3.5" />
                     {isFreeRevision ? "Free Revision Available" : "Edit Quotation"}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[450px] border-4 border-slate-900 rounded-none shadow-[12px_12px_0px_#0F172A] p-0 overflow-hidden bg-white">
-                <div className="p-6 border-b-4 border-slate-900 bg-emerald-50 flex items-center gap-3">
-                    <div className="h-10 w-10 bg-emerald-500 border-2 border-slate-900 flex items-center justify-center">
+            <DialogContent className="sm:max-w-[450px] border border-slate-200 rounded-2xl shadow-xl p-0 overflow-hidden bg-white">
+                <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
+                    <div className="h-10 w-10 bg-slate-900 rounded-xl flex items-center justify-center">
                         <Edit2 className="h-5 w-5 text-white" />
                     </div>
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-black uppercase tracking-tight text-slate-900 leading-none">Update Quotation</DialogTitle>
-                        <DialogDescription className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest mt-1">
+                        <DialogTitle className="text-lg font-bold text-slate-900 leading-none">Update Quotation</DialogTitle>
+                        <DialogDescription className="text-xs text-slate-500 font-medium mt-1">
                             {isFreeRevision
-                                ? "One-time instant secure revision terminal"
-                                : "Secure data update protocol – requires admin audit"}
+                                ? "Instant secure revision available"
+                                : "Secure data update protocol"}
                         </DialogDescription>
                     </DialogHeader>
                 </div>
 
-                <div className="p-8 space-y-6">
+                <div className="p-6 space-y-5">
                     {error && (
-                        <div className="bg-rose-50 border-4 border-rose-500 text-rose-700 text-[10px] p-4 font-black uppercase tracking-widest flex items-start gap-4 shadow-[4px_4px_0px_#F43F5E]">
-                            <AlertCircle className="h-5 w-5 mt-0.5 shrink-0" />
+                        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs p-3.5 rounded-xl font-medium flex items-start gap-3">
+                            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0 text-rose-600" />
                             <p>{error}</p>
                         </div>
                     )}
 
                     <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="price" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Revised Quotation Value (INR)</Label>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="price" className="text-xs font-medium text-slate-600">Revised Quotation Value (INR)</Label>
                             <div className="relative">
-                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-black text-slate-300">₹</div>
+                                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400">₹</div>
                                 <Input
                                     id="price"
                                     type="number"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
                                     max={currentPrice}
-                                    className="h-16 pl-10 text-2xl font-[1000] border-4 border-slate-900 rounded-none bg-slate-50 focus-visible:ring-0 transition-all font-mono"
+                                    className="h-11 pl-9 text-lg font-bold border border-slate-200 rounded-xl bg-slate-50/50 focus-visible:ring-1 focus-visible:ring-slate-900 focus-visible:bg-white transition-all font-mono"
                                 />
-                                <div className="mt-2 text-[8px] font-bold text-slate-400 uppercase tracking-widest">
+                                <div className="mt-1 text-xs text-slate-400 font-medium">
                                     Current/Max: ₹{currentPrice.toLocaleString()}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="leadTime" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Production Lead Time (Days)</Label>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="leadTime" className="text-xs font-medium text-slate-600">Production Lead Time (Days)</Label>
                             <div className="relative">
-                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-black text-slate-300 transform -scale-x-100 rotate-12">
-                                    <Clock className="h-5 w-5" />
+                                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                                    <Clock className="h-4 w-4" />
                                 </div>
                                 <Input
                                     id="leadTime"
                                     type="number"
                                     value={leadTime}
                                     onChange={(e) => setLeadTime(e.target.value)}
-                                    className="h-16 pl-12 text-2xl font-[1000] border-4 border-slate-900 rounded-none bg-slate-50 focus-visible:ring-0 transition-all font-mono"
+                                    className="h-11 pl-10 text-lg font-bold border border-slate-200 rounded-xl bg-slate-50/50 focus-visible:ring-1 focus-visible:ring-slate-900 focus-visible:bg-white transition-all font-mono"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="notes" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Revision Scoping Notes</Label>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="notes" className="text-xs font-medium text-slate-600">Revision Notes</Label>
                             <Textarea
                                 id="notes"
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
-                                placeholder="State internal reasoning for adjustment..."
-                                className="min-h-[120px] border-4 border-slate-900 rounded-none bg-slate-50 focus-visible:ring-0 text-sm font-medium p-4"
+                                placeholder="State reasoning for adjustment..."
+                                className="min-h-[100px] border border-slate-200 rounded-xl bg-slate-50/50 focus-visible:ring-1 focus-visible:ring-slate-900 focus-visible:bg-white text-xs font-normal p-3"
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="p-6 bg-slate-50 border-t-4 border-slate-900 flex justify-end gap-4">
-                    <Button variant="outline" onClick={() => setOpen(false)} disabled={isLoading} className="border-4 border-slate-900 rounded-none font-black uppercase shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all px-8">
+                <div className="p-4 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
+                    <Button variant="outline" onClick={() => setOpen(false)} disabled={isLoading} className="border-slate-200 rounded-xl text-xs font-medium px-5">
                         Cancel
                     </Button>
                     <Button
                         onClick={handleUpdate}
                         disabled={isLoading || !price || !leadTime}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white border-4 border-slate-900 rounded-none font-black uppercase shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all px-8 flex items-center gap-2"
+                        className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-medium px-5 flex items-center gap-2"
                     >
                         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                         Commit Update

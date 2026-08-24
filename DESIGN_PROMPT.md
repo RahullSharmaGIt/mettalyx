@@ -2,15 +2,16 @@
 
 ## Platform Overview
 **METALLYX** is an industrial B2B marketplace connecting **Industrial Vendors** (manufacturers/suppliers) with **OEMs** (equipment manufacturers/buyers) through a bidding system, managed by **Admins** (platform operators).
+where middleman (admin) sits at between vendor and OEM and do not let each other know what products they are building for 
 
 ### Design System Requirements
 - **Primary Brand Color**: #f97316 (Orange)
 - **Accent Colors**: Emerald-500 (#4ade80), Rose-500 (#f43f5e)
 - **Neutral Base**: Slate-900 (#0F172A), Slate-50 (#F8F8F8)
-- **Design Style**: Premium industrial aesthetic with neo-brutalist elements (bold borders, stark shadows, high contrast)
+- **Design Style**: Premium industrial aesthetic or suggest me some 
 - **Typography**: Bold, uppercase tracking for headers; clean sans-serif for body
 - **Spacing**: Consistent 8px grid system
-- **Shadows**: Distinctive offset shadows (8px/8px primary, 4px/4px secondary)
+- **Shadows**: Distinctive offset shadows (8px/8px primary, 2px/2px secondary)
 
 ---
 
@@ -35,9 +36,9 @@ Central hub for industrial vendors to track active bids, manage quotations, and 
   - Title: "Active Bids"
   - Value: Dynamic number (e.g., 7)
   - Subtitle: "Quotes in submission"
-  - Icon: FileText (orange border)
+  - Icon: FileText 
   - Trend: "+2 from last week"
-  - Design: 4px border, shadow offset, industrial styling
+  - Design: 2px border, shadow offset, industrial styling
   
 - **Card 2: Jobs Won**
   - Title: "Jobs Won"
@@ -82,7 +83,7 @@ Central hub for industrial vendors to track active bids, manage quotations, and 
   - Unlock Request Status: Pending/Approved
 
 - Visual Treatment:
-  - 4px solid border, 8px shadow offset
+  - 2px solid border, 8px shadow offset
   - Hover state: slight translate and shadow reduction
   - Status indicators: colored left border stripe
 
@@ -94,7 +95,7 @@ Central hub for industrial vendors to track active bids, manage quotations, and 
   - Label: "FACILITY INSIGHTS" (10px, font-bold, orange, tracked spacing)
   - Headline: "Optimization Protocol Alpha" (2xl, font-black, white)
   - Hover effect: Grayscale to color transition, scale 1.1x
-  - Border: 4px solid slate-900, shadow offset
+  - Border: 2px solid slate-900, shadow offset
 
 - **Block 2: Quality Control**
   - Background: Quality/inspection imagery
@@ -125,13 +126,13 @@ Central hub for industrial vendors to track active bids, manage quotations, and 
   - **Export Optimization**: "Batch #409 Ready for Export Report"
   
 - Design:
-  - Each item: 4px border, inline icons, color-coded status
+  - Each item: 2px border, inline icons, color-coded status
   - Call-to-action items: "Learn More" or "View Report" links
 
 #### 1.7 Export Optimization Report CTA
 **Component: Prominent CTA Block**
 - Background: Orange (#f97316)
-- Border: 4px solid slate-900
+- Border: 2px solid slate-900
 - Shadow: 8px offset
 - Content:
   - Title: "EXPORT OPTIMIZATION REPORT" (xl, font-black, white)
@@ -188,7 +189,7 @@ Central hub for OEMs to create jobs, track submissions, and monitor vendor respo
 - Section Header:
   - Title: "YOUR JOBS" (3xl, font-black, uppercase)
   - Subtitle: "Sort: Recent" (small, tracked spacing, right-aligned)
-  - Divider: 4px bottom border
+  - Divider: 2px bottom border
 
 - For each job card:
   - **Visual Layout**:
@@ -219,7 +220,7 @@ Central hub for OEMs to create jobs, track submissions, and monitor vendor respo
     - Delete/Archive
     - Copy Job (duplicate)
   
-  - **Border & Spacing**: 4px border, 8px shadow, hover lift
+  - **Border & Spacing**: 2px border, 8px shadow, hover lift
   
 - **Empty State**:
   - Icon: Hammer (muted color)
@@ -404,7 +405,7 @@ For each pending vendor:
   
   - Optional: "REVIEW DOCUMENTS" link (opens modal/drawer)
 
-- **Border & Styling**: 4px border, shadow offset, card background light color
+- **Border & Styling**: 2px border, shadow offset, card background light color
 
 #### 5.3 Bulk Actions
 - Checkbox selection for multiple vendors
@@ -452,7 +453,7 @@ Comprehensive interface for admins to review job submissions, manage vendor unlo
     - "DENY" button (secondary)
     - View full bid details link
   
-  - **Styling**: 4px border, indigo-themed accent, light background
+  - **Styling**: 2px border, indigo-themed accent, light background
 
 - **Empty State**: "No unlock requests at this time"
 
@@ -491,7 +492,7 @@ Comprehensive interface for admins to review job submissions, manage vendor unlo
     - "CONFIRM APPROVAL" CTA
     - "CANCEL" link
   
-  - **Styling**: 4px amber-tinted border, light background, hover lift
+  - **Styling**: 2px amber-tinted border, light background, hover lift
 
 #### 6.4 All Jobs Pipeline (Table/List View)
 **Component: Collapsible Table or Card List**
@@ -571,24 +572,24 @@ Allow OEMs to manage vendor access to specific jobs and view vendor response ana
 - **Base unit**: 8px (0.5rem)
 - **Component padding**: 24-32px
 - **Margin between sections**: 32-48px
-- **Gap between cards**: 24px
+- **Gap between cards**: 22px
 
 ### Borders & Shadows
-- **Border width**: 4px for primary, 2px for secondary
+- **Border width**: 2px for primary, 2px for secondary
 - **Border style**: Solid, square corners (no border-radius on primary)
 - **Shadow**: offset-x=8px, offset-y=8px, blur=0px, color=slate-900/100
-- **Secondary shadow**: 4px offset for smaller elements
+- **Secondary shadow**: 2px offset for smaller elements
 
 ### Icons
 - Icon library: Lucide React
-- Size: 20-24px for primary actions, 16-20px for secondary
+- Size: 20-22px for primary actions, 16-20px for secondary
 - Color: Inherit text color (slate-900 by default)
 
 ---
 
 ## Responsive Breakpoints
 - **Mobile**: 0-640px (single column, stacked layout)
-- **Tablet**: 641-1024px (2-column layout)
+- **Tablet**: 641-1022px (2-column layout)
 - **Desktop**: 1025px+ (3-column layout)
 
 ## Interaction States

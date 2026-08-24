@@ -7,12 +7,17 @@ import { usePathname } from "next/navigation";
 
 import { useSidebar } from "./SidebarContext";
 
-export const OEMNavbarTrigger = () => {
+
+
+import { OEMUserData } from "./OEMLayoutWrapper";
+
+export const OEMNavbarTrigger = ({ oemUser }: { oemUser?: OEMUserData }) => {
     const pathname = usePathname();
     const { openSidebar } = useSidebar();
 
     const getTitle = (path: string) => {
         if (path.includes("/dashboard")) return "OEM Dashboard";
+        if (path.includes("/profile")) return "My OEM Profile";
         if (path.includes("/jobs")) return "Job Management";
         if (path.includes("/post-job")) return "Post Requirement";
         if (path.includes("/inventory")) return "Inventory Portal";
@@ -21,27 +26,28 @@ export const OEMNavbarTrigger = () => {
     };
 
     return (
-        <header className="flex items-center justify-between p-4 border-b-4 border-slate-900 bg-white sticky top-0 z-50">
+        <header className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white sticky top-0 z-50">
             <div className="flex items-center gap-4">
                 <Button
                     variant="ghost"
                     size="icon"
                     onClick={openSidebar}
-                    className="border-2 border-slate-900 shadow-[2px_2px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all"
+                    className="border border-slate-200 rounded-lg hover:bg-slate-100 transition-all h-10 w-10"
                 >
-                    <Menu className="h-6 w-6" />
+                    <Menu className="h-5 w-5 text-slate-700" />
                 </Button>
-                <h1 className="text-xl font-black uppercase tracking-tight text-slate-900 truncate max-w-[150px] md:max-w-none">
+                {/* top heading shows which page we are currently at */}
+                <h1 className="text-lg font-bold text-slate-900 truncate max-w-[150px] md:max-w-none">
                     {getTitle(pathname)}
                 </h1>
             </div>
 
             <Link href="/oem/post-job">
-                <Button className="font-black uppercase border-2 border-slate-900 shadow-[4px_4px_0px_#0F172A] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] bg-[#f97316] text-slate-900">
-                    <Plus className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Post Job</span>
+                <Button className="font-medium border border-slate-900 bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-sm transition-all px-3 sm:px-4 py-2">
+                    <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="text-xs sm:text-sm">Post Job</span>
                 </Button>
             </Link>
-        </header>
+        </header>   
     );
 };

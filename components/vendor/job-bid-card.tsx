@@ -12,6 +12,8 @@ interface JobBidCardProps {
         material: string;
         quantity: number;
         location: string;
+        deadline: Date;
+        maxLeadTimeDays: number;
         targetVendorPrice: number | null;
         minPriceFloor: number | null;
         createdAt: Date;
@@ -105,6 +107,8 @@ export function JobBidCard({ job }: JobBidCardProps) {
                     targetPrice={job.targetVendorPrice}
                     hasBid={job.hasBid}
                     lowestBid={job.lowestBid}
+                    maxLeadTimeDays={job.maxLeadTimeDays}
+                    deadline={job.deadline}
                 />
             </CardFooter>
         </Card>

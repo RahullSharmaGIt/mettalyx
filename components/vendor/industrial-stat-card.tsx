@@ -23,29 +23,26 @@ export const IndustrialStatCard = ({
     statusIcon: StatusIcon
 }: StatCardProps) => {
     return (
-        <div className={cn(
-            "bg-white border-4 p-8 relative flex flex-col justify-between h-[240px] shadow-[8px_8px_0px_#0F172A]",
-            borderColor
-        )}>
-            <div className="flex justify-between items-start">
-                <span className="text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">{title}</span>
-                <div className="h-10 w-10 bg-slate-50 border-2 border-slate-900 flex items-center justify-center shadow-[2px_2px_0px_#0F172A]">
-                    <Icon className="h-5 w-5 text-slate-900" />
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 relative flex flex-col justify-between h-[200px] shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-center">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{title}</span>
+                <div className="h-10 w-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                    <Icon className="h-5 w-5 text-slate-700" />
                 </div>
             </div>
 
-            <div className="mt-4">
-                <div className={cn("text-5xl font-black mb-2 tracking-tighter", textColor)}>{value}</div>
-                <div className="flex items-center gap-2">
-                    {StatusIcon && <StatusIcon className={cn("h-3.5 w-3.5", textColor)} />}
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+            <div className="mt-2">
+                <div className="text-4xl font-bold text-slate-900 tracking-tight mb-1.5">{value}</div>
+                <div className="flex items-center gap-1.5">
+                    {StatusIcon && <StatusIcon className="h-3.5 w-3.5 text-slate-500" />}
+                    <span className="text-xs text-slate-500 font-medium">
                         {subtitle}
                     </span>
                 </div>
             </div>
 
             {trend && (
-                <div className="mt-4 flex items-center gap-2 text-emerald-500 font-black uppercase text-[10px] tracking-widest">
+                <div className="mt-3 flex items-center gap-1 text-emerald-600 font-semibold text-xs">
                     <span>↗</span>
                     <span>{trend}</span>
                 </div>

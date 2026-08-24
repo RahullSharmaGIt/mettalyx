@@ -24,9 +24,11 @@ interface SubmitBidModalProps {
     targetPrice: number | null;
     hasBid: boolean;
     lowestBid: number | null;
+    maxLeadTimeDays?: number;
+    deadline?: Date;
 }
 
-export function SubmitBidModal({ jobId, minPriceFloor, targetPrice, hasBid, lowestBid }: SubmitBidModalProps) {
+export function SubmitBidModal({ jobId, minPriceFloor, targetPrice, hasBid, lowestBid, maxLeadTimeDays, deadline }: SubmitBidModalProps) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +49,11 @@ export function SubmitBidModal({ jobId, minPriceFloor, targetPrice, hasBid, lowe
 
         if (minPriceFloor !== null && parsedPrice < minPriceFloor) {
             setError(`Bid rejected. The Minimum Price Floor set for this job is ₹${minPriceFloor.toLocaleString()} to ensure quality standards. We do not accept bids below this margin.`);
+            return;
+        }
+
+        if (maxLeadTimeDays && parsedLeadTime > maxLeadTimeDays) {
+            setError(`Lead time exceeds the OEM deadline threshold of ${maxLeadTimeDays} days. Please enter ${maxLeadTimeDays} days or less.`);
             return;
         }
 
@@ -130,14 +137,35 @@ export function SubmitBidModal({ jobId, minPriceFloor, targetPrice, hasBid, lowe
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="leadTime">Estimated Lead Time (Days)</Label>
+                        <div className="flex justify-between items-center">
+                            <Label htmlFor="leadTime">Estimated Lead Time (Days)</Label>
+                            {maxLeadTimeDays && (
+                                <span className="text-xs font-semibold text-rose-600">
+                                    Max limit: {maxLeadTimeDays} days
+                                </span>
+                            )}
+                        </div>
                         <Input
                             id="leadTime"
                             type="number"
-                            placeholder="e.g. 14"
+                            max={maxLeadTimeDays}
+                            placeholder={maxLeadTimeDays ? `Max ${maxLeadTimeDays} days` : "e.g. 14"}
                             value={leadTime}
-                            onChange={(e) => setLeadTime(e.target.value)}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                setLeadTime(val);
+                                if (maxLeadTimeDays && parseInt(val, 10) > maxLeadTimeDays) {
+                                    setError(`Lead time threshold exceeded! OEM deadline requires completion within ${maxLeadTimeDays} days.`);
+                                } else {
+                                    setError(null);
+                                }
+                            }}
                         />
+                        {maxLeadTimeDays && deadline && (
+                            <p className="text-[11px] text-slate-500">
+                                OEM deadline is {new Date(deadline).toLocaleDateString()}. Your delivery time cannot exceed <strong>{maxLeadTimeDays} days</strong>.
+                            </p>
+                        )}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="notes">Notes (Optional)</Label>
@@ -156,7 +184,7 @@ export function SubmitBidModal({ jobId, minPriceFloor, targetPrice, hasBid, lowe
                     </Button>
                     <Button
                         onClick={handleSubmit}
-                        disabled={isLoading || !price || !leadTime}
+                        disabled={isLoading || !price || !leadTime || (!!maxLeadTimeDays && parseInt(leadTime, 10) > maxLeadTimeDays)}
                         className="bg-emerald-600 hover:bg-emerald-700"
                     >
                         {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}

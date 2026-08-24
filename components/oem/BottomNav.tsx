@@ -10,11 +10,11 @@ interface NavItemProps {
 const NavItem = ({ icon: Icon, label, active }: NavItemProps) => {
     return (
         <div className={cn(
-            "flex flex-col items-center justify-center p-2 rounded-lg transition-all border-2",
-            active ? "bg-[#f97316] border-slate-900 shadow-[2px_2px_0px_#0F172A]" : "border-transparent text-slate-500"
+            "flex flex-col items-center justify-center p-2 rounded-lg transition-all",
+            active ? "bg-slate-900 text-white shadow-xs" : "text-slate-500 hover:text-slate-900"
         )}>
-            <Icon className={cn("h-6 w-6", active ? "text-slate-900" : "text-slate-500")} />
-            <span className={cn("text-[9px] font-black uppercase mt-1", active ? "text-slate-900" : "text-slate-500")}>
+            <Icon className={cn("h-5 w-5", active ? "text-white" : "text-slate-500")} />
+            <span className={cn("text-[10px] font-medium mt-0.5", active ? "text-white" : "text-slate-500")}>
                 {label}
             </span>
         </div>
@@ -23,7 +23,7 @@ const NavItem = ({ icon: Icon, label, active }: NavItemProps) => {
 
 export const BottomNav = () => {
     return (
-        <nav className="md:hidden fixed bottom-4 left-4 right-4 h-16 bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#0F172A] flex items-center justify-around z-50">
+        <nav className="md:hidden fixed bottom-4 left-4 right-4 h-16 bg-white border border-slate-200 shadow-lg rounded-2xl flex items-center justify-around z-50 px-2">
             <NavItem icon={LayoutDashboard} label="Dashboard" active />
             <NavItem icon={Briefcase} label="Jobs" />
             <NavItem icon={Box} label="Inventory" />

@@ -246,3 +246,20 @@ enum BidStatus {
   REJECTED
   WON
 }
+
+
+model Product {
+
+  id          Int @id @default(autoincrement())
+
+  name        String
+
+  category    String
+
+  price       Float
+
+  inStock     Boolean
+
+  description String
+
+}

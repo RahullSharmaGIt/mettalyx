@@ -32,12 +32,14 @@ export async function getOpenJobsForBidding() {
             material: true,
             quantity: true,
             location: true,
+            deadline: true,
             targetVendorPrice: true,
             minPriceFloor: true,
             createdAt: true,
             bids: {
                 select: {
                     proposedPrice: true,
+                    proposedLeadTime: true,
                     vendorId: true,
                 },
             },
@@ -47,12 +49,19 @@ export async function getOpenJobsForBidding() {
         },
     });
 
+    const now = new Date();
+
     return jobs.map((job) => {
         const lowestBid = job.bids.length > 0
             ? Math.min(...job.bids.map(b => b.proposedPrice))
             : null;
 
-        const hasBid = (job as any).bids.some((b: any) => b.vendorId === vendorId);
+        const vendorBid = job.bids.find((b: any) => b.vendorId === vendorId);
+        const hasBid = !!vendorBid;
+
+        // Calculate max allowed lead time days threshold (X) from job deadline
+        const diffMs = new Date(job.deadline).getTime() - now.getTime();
+        const maxLeadTimeDays = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
 
         return {
             id: job.id,
@@ -60,12 +69,18 @@ export async function getOpenJobsForBidding() {
             material: job.material,
             quantity: job.quantity,
             location: job.location,
+            deadline: job.deadline,
+            maxLeadTimeDays,
             targetVendorPrice: job.targetVendorPrice,
             minPriceFloor: job.minPriceFloor,
             createdAt: job.createdAt,
             totalBids: (job as any).bids.length,
             lowestBid,
             hasBid,
+            myBid: vendorBid ? {
+                proposedPrice: vendorBid.proposedPrice,
+                proposedLeadTime: vendorBid.proposedLeadTime,
+            } : null,
         };
     });
 }
@@ -80,7 +95,7 @@ export async function submitBid(jobId: string, price: number, leadTime: number, 
 
     const job = await prisma.job.findUnique({
         where: { id: jobId },
-        select: { status: true, minPriceFloor: true },
+        select: { status: true, minPriceFloor: true, deadline: true },
     });
 
     if (!job || job.status !== "OPEN") {
@@ -89,6 +104,15 @@ export async function submitBid(jobId: string, price: number, leadTime: number, 
 
     if (job.minPriceFloor !== null && price < job.minPriceFloor) {
         throw new Error("Bid price is below the required minimum floor.");
+    }
+
+    // Lead Time threshold validation: cannot exceed remaining days until OEM deadline (X)
+    const now = new Date();
+    const diffMs = new Date(job.deadline).getTime() - now.getTime();
+    const maxLeadTimeDays = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+
+    if (leadTime > maxLeadTimeDays) {
+        throw new Error(`Lead time cannot exceed the OEM deadline threshold of ${maxLeadTimeDays} days.`);
     }
 
     // Upsert the bid
@@ -123,7 +147,7 @@ export async function updateBid(bidId: string, newPrice: number, newLeadTime: nu
 
     const bid = await prisma.bid.findUnique({
         where: { id: bidId },
-        include: { job: { select: { status: true, minPriceFloor: true } } }
+        include: { job: { select: { status: true, minPriceFloor: true, deadline: true } } }
     });
 
     if (!bid || bid.vendorId !== vendorId) {
@@ -144,6 +168,15 @@ export async function updateBid(bidId: string, newPrice: number, newLeadTime: nu
 
     if (bid.job.minPriceFloor !== null && newPrice < bid.job.minPriceFloor) {
         throw new Error("Bid price is below the required minimum floor.");
+    }
+
+    // Lead Time threshold validation for revision
+    const now = new Date();
+    const diffMs = new Date(bid.job.deadline).getTime() - now.getTime();
+    const maxLeadTimeDays = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+
+    if (newLeadTime > maxLeadTimeDays) {
+        throw new Error(`Lead time cannot exceed the OEM deadline threshold of ${maxLeadTimeDays} days.`);
     }
 
     const currentUpdateCount = (bid as any).updateCount || 0;
