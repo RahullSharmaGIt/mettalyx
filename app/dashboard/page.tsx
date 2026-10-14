@@ -1,5 +1,6 @@
 import { auth} from "@/auth";
 import { Button } from "@/components/ui/button";
+import SocketTest from "@/components/socket/socketTest";
 import { logout } from "@/app/dashboard/actions";
 
 const DashboardPage = async () => {
@@ -19,6 +20,7 @@ const DashboardPage = async () => {
           Sign Out
         </Button>
       </form>
+      <SocketTest />
     </div>
   );
 }
